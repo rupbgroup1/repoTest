@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using WebApplication1.Models.DAL;
 
 namespace WebApplication1.Models
 {
@@ -20,6 +21,16 @@ namespace WebApplication1.Models
             CityCode = cityCode;
             CityName = cityName;
             Size = size;
+        }
+        public City()
+        {
+
+        }
+
+        public List<City> getAllCities()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.getAllCities();
         }
     }
 }

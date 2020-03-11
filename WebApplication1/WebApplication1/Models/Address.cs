@@ -32,5 +32,15 @@ namespace WebApplication1.Models
             Lon = lon;
             Lat = lat;
         }
+        public Address()
+        {
+
+        }
+
+        public List<Address> getAllStreets(City c)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.getAllStreets(c);
+        }
     }
 }
