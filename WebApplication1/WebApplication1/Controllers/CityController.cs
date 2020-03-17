@@ -4,15 +4,19 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebApplication1.Models;
+using WebApplication1.Models.DAL;
 
 namespace WebApplication1.Controllers
 {
     public class CityController : ApiController
     {
-        // GET api/<controller>
-        public IEnumerable<string> Get()
+        // GET api/City
+        //http://localhost:50456/api/City
+        public List<City> Get()
         {
-            return new string[] { "value1", "value2" };
+            City city = new City();
+            return city.getAllCities();
         }
 
         // GET api/<controller>/5

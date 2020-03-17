@@ -7,5 +7,8 @@ namespace WebApplication1.Models
 {
     public class Image
     {
+        int id;
+        DateTime uploadTime;
+        
     }
 }

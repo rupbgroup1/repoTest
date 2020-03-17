@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
@@ -22,8 +23,10 @@ namespace WebApplication1.Controllers
         }
 
         // POST api/<controller>
-        public void Post([FromBody]string value)
+        public void Post([FromBody]User value)
         {
+            User newUser = new User();
+            newUser.addToDB(value);
         }
 
         // PUT api/<controller>/5

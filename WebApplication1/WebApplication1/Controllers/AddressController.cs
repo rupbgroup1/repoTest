@@ -5,7 +5,6 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using WebApplication1.Models;
-using WebApplication1.Models.DAL;
 
 namespace WebApplication1.Controllers
 {
@@ -20,8 +19,8 @@ namespace WebApplication1.Controllers
         // GET api/<controller>/5
         public List<Address> Get(City c)
         {
-            DBservices dbs = new DBservices();
-            return dbs.getAllStreets(c);
+            Address a = new Address();
+            return a.getAllStreets(c);
         }
 
         // POST api/<controller>
