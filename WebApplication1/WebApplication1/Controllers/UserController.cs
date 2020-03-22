@@ -17,11 +17,11 @@ namespace WebApplication1.Controllers
         }
 
         // GET api/<controller>/username
-        public User Get(User u)
-        {
-            User userDetails = new User();
-            return userDetails.getUserByDetails(u);
-        }
+        //public User Get(string username, string password)
+        //{
+        //    User userDetails = new User();
+        //    return userDetails.getUserByDetails(username, password);
+        //}
 
         // POST api/User
         public int Post([FromBody]User value)
@@ -31,7 +31,7 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        [Route ("api/User/login")]
+        [Route("api/User/login")]
         public User PostLogin([FromBody]User value)
         {
             User log = new User();

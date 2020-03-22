@@ -42,7 +42,7 @@ namespace WebApplication1.Models.DAL
         }
 
         //*****************User***************************************
-        
+
         //add new user
         private String BuildInsertCommand(User u)
         {
@@ -55,7 +55,7 @@ namespace WebApplication1.Models.DAL
 
             return command;
         }
-        
+
         public int addNewUserToDB(User newUser)
         {
             SqlConnection con;
@@ -119,14 +119,36 @@ namespace WebApplication1.Models.DAL
                     userDetails.LastName = (string)dr["LastName"];
                     userDetails.Gender = Convert.ToInt32(dr["Gender"]);
                     userDetails.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
-                    userDetails.AddressId = Convert.ToInt32(dr["StreetCode"]);
-                    userDetails.ImageId = Convert.ToInt32(dr["ImageId"]);
+                    if (dr["StreetCode"].GetType() != typeof(DBNull))
+                    {
+                        userDetails.AddressId = Convert.ToInt32(dr["StreetCode"]);
+                    }
+                    if (dr["ImageId"].GetType() != typeof(DBNull))
+                    {
+                        userDetails.ImageId = Convert.ToInt32(dr["ImageId"]);
+                    }
                     userDetails.IsPrivateName = Convert.ToBoolean(dr["IsPrivateName"]);
-                    userDetails.JobTitleId = Convert.ToInt32(dr["JobTitleCode"]);
-                    userDetails.WorkPlace = (string)dr["WorkPlace"];
-                    userDetails.FamilyStatus = (string)dr["FamilyStatus"];
-                    userDetails.NumOfChildren= Convert.ToInt32(dr["NumberOfChildren"]);
-                    userDetails.AboutMe = (string)dr["AboutMe"];
+                    if (dr["JobTitleCode"].GetType() != typeof(DBNull))
+                    {
+                        userDetails.JobTitleId = Convert.ToInt32(dr["JobTitleCode"]);
+                    }
+                    if (dr["WorkPlace"].GetType() != typeof(DBNull))
+                    {
+                        userDetails.WorkPlace = (string)dr["WorkPlace"];
+                    }
+                    if (dr["FamilyStatus"].GetType() != typeof(DBNull))
+                    {
+                        userDetails.FamilyStatus = (string)dr["FamilyStatus"];
+                    }
+                    if (dr["NumberOfChildren"].GetType() != typeof(DBNull))
+                    {
+                        userDetails.NumOfChildren = Convert.ToInt32(dr["NumberOfChildren"]);
+                    }
+                    if (dr["AboutMe"].GetType() != typeof(DBNull))
+                    {
+                        userDetails.AboutMe = (string)dr["AboutMe"];
+                    }
+
                 }
 
                 return userDetails;
@@ -147,7 +169,7 @@ namespace WebApplication1.Models.DAL
         }
 
         //get user by username and password
-        public int getUserByDetails(string username, string password)
+        public int getUserByDetailsOld(string username, string password)
         {
             int userId = 0;
             SqlConnection con = null;
@@ -163,7 +185,7 @@ namespace WebApplication1.Models.DAL
 
                 while (dr.Read())
                 {
-                   userId = Convert.ToInt32(dr["UserCode"]);
+                    userId = Convert.ToInt32(dr["UserCode"]);
                 }
 
                 return userId;
@@ -192,15 +214,15 @@ namespace WebApplication1.Models.DAL
             try
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
-                String selectSTR = "SELECT * FROM Users where UserCode="+Id;
+                String selectSTR = "SELECT * FROM Users where UserCode=" + Id;
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
 
                 while (dr.Read())
-                {   
-                   userDetails.FirstName = (string)dr["FirstName"];
+                {
+                    userDetails.FirstName = (string)dr["FirstName"];
                     userDetails.LastName = (string)dr["LastName"];
                     userDetails.Gender = Convert.ToInt32(dr["Gender"]);
                     userDetails.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
@@ -211,7 +233,7 @@ namespace WebApplication1.Models.DAL
                     userDetails.WorkPlace = (string)dr["WorkPlace"];
                     userDetails.FamilyStatus = (string)dr["FamilyStatus"];
 
-                    
+
                 }
 
                 return userDetails;

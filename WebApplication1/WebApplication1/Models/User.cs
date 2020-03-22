@@ -47,12 +47,6 @@ namespace WebApplication1.Models
 
         }
 
-        public User(string email, string password)
-        {
-           Email = email;
-           Password = password;
-        }
-
         public int addToDB(User newUser)
         {
             DBservices dbs = new DBservices();
