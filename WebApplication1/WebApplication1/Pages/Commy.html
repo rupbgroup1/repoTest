@@ -3,8 +3,6 @@
 <head>
     <meta charset="utf-8" />
     <title></title>
-
-
     <script src="../Scripts/ajaxCalls.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js"
             integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
@@ -13,13 +11,36 @@
     <script>
 
         $(document).ready(function () {
-           ajaxCall("GET", "../api/City", "", succ2, err2);
+           //getCIty();
+            postNewUser();
+          
         });
+        function getCIty(){
+            ajaxCalls("GET", "../api/City", "", succ2, err2);
+        }
    
         function succ2(data) {
             console.log(data);
         }
         function err2(data) {
+            console.log(data);
+        }
+        function postNewUser() {
+            let newUser = {
+                Email: "test@gmail.com",
+                Password: "123456",
+                FirstName: "nitzan",
+                LastName: "adar",
+                Gender: 1,
+                YearOfBirth: "1994",
+                IsPrivateName: false
+            }
+            ajaxCall("POST", "../api/User", JSON.stringify(newUser), successPost, errorPost);
+         }
+        function successPost(data) {
+            console.log(data);
+        }
+        function errorPost(data) {
             console.log(data);
         }
     </script>

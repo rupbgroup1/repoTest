@@ -16,17 +16,26 @@ namespace WebApplication1.Controllers
             return new string[] { "value1", "value2" };
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        // GET api/<controller>/username
+        public User Get(User u)
         {
-            return "value";
+            User userDetails = new User();
+            return userDetails.getUserByDetails(u);
         }
 
-        // POST api/<controller>
-        public void Post([FromBody]User value)
+        // POST api/User
+        public int Post([FromBody]User value)
         {
             User newUser = new User();
-            newUser.addToDB(value);
+            return newUser.addToDB(value);
+        }
+
+        [HttpPost]
+        [Route ("api/User/login")]
+        public User PostLogin([FromBody]User value)
+        {
+            User log = new User();
+            return log.getUserByDetails(value);
         }
 
         // PUT api/<controller>/5

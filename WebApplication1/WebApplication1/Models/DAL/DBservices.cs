@@ -42,22 +42,20 @@ namespace WebApplication1.Models.DAL
         }
 
         //*****************User***************************************
-
-        //we need to adjast the values and command!!!!!!!
+        
+        //add new user
         private String BuildInsertCommand(User u)
         {
             String command;
             StringBuilder sb = new StringBuilder();
             // use a string builder to create the dynamic string
-            sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}','{4}','{5}', '{6}' ,'{7}')", u.Email, u.Password, u.FirstName, u.LastName, u.Gender, u.YearOfBirth, u.Address, u.IsPrivateName);
-            String prefix = "INSERT INTO Users" + "(Email, PasswordUser, FirstName, LastName, Gender, YearOfBirth, StreetCode, IsPrivateName)";
+            sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}','{4}','{5}', '{6}' )", u.Email, u.Password, u.FirstName, u.LastName, u.Gender, u.YearOfBirth, u.IsPrivateName);
+            String prefix = "INSERT INTO Users" + "(Email, PasswordUser, FirstName, LastName, Gender, YearOfBirth, IsPrivateName)";
             command = prefix + sb.ToString();
 
             return command;
         }
-
-
-
+        
         public int addNewUserToDB(User newUser)
         {
             SqlConnection con;
@@ -96,6 +94,140 @@ namespace WebApplication1.Models.DAL
                     // close the db connection
                     con.Close();
                 }
+            }
+        }
+
+        //get user by username and password
+        public User getUserByDetails(User u)
+        {
+            User userDetails = new User();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+                String selectSTR = "SELECT * FROM Users where Email='" + u.Email + "' AND PasswordUser='" + u.Password + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {
+                    userDetails.UserId = Convert.ToInt32(dr["UserCode"]);
+                    userDetails.FirstName = (string)dr["FirstName"];
+                    userDetails.LastName = (string)dr["LastName"];
+                    userDetails.Gender = Convert.ToInt32(dr["Gender"]);
+                    userDetails.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
+                    userDetails.AddressId = Convert.ToInt32(dr["StreetCode"]);
+                    userDetails.ImageId = Convert.ToInt32(dr["ImageId"]);
+                    userDetails.IsPrivateName = Convert.ToBoolean(dr["IsPrivateName"]);
+                    userDetails.JobTitleId = Convert.ToInt32(dr["JobTitleCode"]);
+                    userDetails.WorkPlace = (string)dr["WorkPlace"];
+                    userDetails.FamilyStatus = (string)dr["FamilyStatus"];
+                    userDetails.NumOfChildren= Convert.ToInt32(dr["NumberOfChildren"]);
+                    userDetails.AboutMe = (string)dr["AboutMe"];
+                }
+
+                return userDetails;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
+        //get user by username and password
+        public int getUserByDetails(string username, string password)
+        {
+            int userId = 0;
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+                String selectSTR = "SELECT UserCode FROM Users where Email='" + username + "' AND PasswordUser='" + password + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {
+                   userId = Convert.ToInt32(dr["UserCode"]);
+                }
+
+                return userId;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
+        //get all details by Id
+        public User getUserDetails(int Id)
+        {
+            User userDetails = new User();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+                String selectSTR = "SELECT * FROM Users where UserCode="+Id;
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   
+                   userDetails.FirstName = (string)dr["FirstName"];
+                    userDetails.LastName = (string)dr["LastName"];
+                    userDetails.Gender = Convert.ToInt32(dr["Gender"]);
+                    userDetails.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
+                    userDetails.AddressId = Convert.ToInt32(dr["StreetCode"]);
+                    userDetails.ImageId = Convert.ToInt32(dr["ImageId"]);
+                    userDetails.IsPrivateName = Convert.ToBoolean(dr["IsPrivateName"]);
+                    userDetails.JobTitleId = Convert.ToInt32(dr["JobTitleCode"]);
+                    userDetails.WorkPlace = (string)dr["WorkPlace"];
+                    userDetails.FamilyStatus = (string)dr["FamilyStatus"];
+
+                    
+                }
+
+                return userDetails;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
             }
         }
 

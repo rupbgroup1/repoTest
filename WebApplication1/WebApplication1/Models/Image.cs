@@ -9,6 +9,8 @@ namespace WebApplication1.Models
     {
         int id;
         DateTime uploadTime;
+
+
         
     }
 }
