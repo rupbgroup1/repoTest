@@ -11,6 +11,7 @@ namespace WebApplication1.Models.DAL
 {
     public class DBservices
     {
+        
         public SqlDataAdapter da;
         public DataTable dt;
 
@@ -97,7 +98,7 @@ namespace WebApplication1.Models.DAL
             }
         }
 
-        //get user by username and password
+        //get user by username and password - Called from login screen
         public User getUserByDetails(User u)
         {
             User userDetails = new User();
@@ -169,31 +170,32 @@ namespace WebApplication1.Models.DAL
         }
 
         //get user by username and password
-        public int getUserByDetailsOld(string username, string password)
+        //get - check if there is user with this email in the system
+        public int GetUserByEmail(string userEmail)
         {
-            int userId = 0;
             SqlConnection con = null;
+            int UserId = 0;
 
             try
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
-                String selectSTR = "SELECT UserCode FROM Users where Email='" + username + "' AND PasswordUser='" + password + "'";
+                String selectSTR = "SELECT UserCode FROM Users where Email='" + userEmail + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); 
 
                 while (dr.Read())
                 {
-                    userId = Convert.ToInt32(dr["UserCode"]);
+                    UserId = Convert.ToInt32(dr["UserCode"]);
                 }
 
-                return userId;
+                return UserId;
             }
             catch (Exception ex)
             {
                 // write to log
-                throw (ex);
+                return 0;
             }
             finally
             {

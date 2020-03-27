@@ -12,9 +12,20 @@
 
         $(document).ready(function () {
            //getCIty();
-            postNewUser();
+            //postNewUser();
+            getUser();
           
         });
+        function getUser() {
+            ajaxCall("GET", "../api/User/?username=test1@gmail.com", "", succ3, err3);
+        }
+
+        function succ3(data) {
+            console.log(data);
+        }
+        function err3(data) {
+            console.log(data);
+        }
         function getCIty(){
             ajaxCalls("GET", "../api/City", "", succ2, err2);
         }

@@ -11,17 +11,18 @@ namespace WebApplication1.Controllers
     public class UserController : ApiController
     {
         // GET api/<controller>
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<controller>/username
-        //public User Get(string username, string password)
+        //public IEnumerable<string> Get()
         //{
-        //    User userDetails = new User();
-        //    return userDetails.getUserByDetails(username, password);
+        //    return new string[] { "value1", "value2" };
         //}
+
+        [HttpGet]
+        [Route("api/User")]
+        public int Get(string username)
+        {
+            User userDetails = new User();
+            return userDetails.GetUserByEmail(username);
+        }
 
         // POST api/User
         public int Post([FromBody]User value)
