@@ -15,11 +15,7 @@ namespace WebApplication1.Models
         string lastName;
         int gender;
         int yearOfBirth;
-        int imageId;
-        Image image;
-        string imagePath;
         Address address;
-        bool isPrivateName;
         int jobTitleId;
         string workPlace;
         string familyStatus;
@@ -29,9 +25,14 @@ namespace WebApplication1.Models
         Intrests[] intrests;
         int addressId;
         JobTitle jobTitle;
+        string imagePath;
+        double lat;
+        double lan;
+        string cityName;
+        string neighborhoodName;
 
 
-        public User(string email, string password, string firstName, string lastName, int gender, int yearOfBirth, bool isPrivateName)
+        public User(string email, string password, string firstName, string lastName, int gender, int yearOfBirth)
         {
             Email = email;
             Password = password;
@@ -39,7 +40,6 @@ namespace WebApplication1.Models
             LastName = lastName;
             Gender = gender;
             YearOfBirth = yearOfBirth;
-            IsPrivateName = isPrivateName;
         }
 
         public User()
@@ -64,6 +64,17 @@ namespace WebApplication1.Models
             DBservices dbs = new DBservices();
             return dbs.GetUserByEmail(userEmail);
         }
+        public List<User> GetAllUsersByName(string cityName, string userName)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetAllUsersByName(cityName, userName);
+        }
+        public List<User> GetAllUsersByfullName(string cityName, string firstName, string lastName)
+        {
+            DBservices dbs = new DBservices();
+            
+            return dbs.GetAllUsersByfullName(cityName, firstName, lastName);
+        }
 
         public int UserId { get => userId; set => userId = value; }
         public string Email { get => email; set => email = value; }
@@ -72,9 +83,7 @@ namespace WebApplication1.Models
         public string LastName { get => lastName; set => lastName = value; }
         public int Gender { get => gender; set => gender = value; }
         public int YearOfBirth { get => yearOfBirth; set => yearOfBirth = value; }
-        public int ImageId { get => imageId; set => imageId = value; }
         public Address Address { get => address; set => address = value; }
-        public bool IsPrivateName { get => isPrivateName; set => isPrivateName = value; }
         public int JobTitleId { get => jobTitleId; set => jobTitleId = value; }
         public string WorkPlace { get => workPlace; set => workPlace = value; }
         public string FamilyStatus { get => familyStatus; set => familyStatus = value; }
@@ -82,9 +91,12 @@ namespace WebApplication1.Models
         public string AboutMe { get => aboutMe; set => aboutMe = value; }
         public Kids[] Kids { get => kids; set => kids = value; }
         public Intrests[] Intrests { get => intrests; set => intrests = value; }
-        public Image Image { get => image; set => image = value; }
         public int AddressId { get => addressId; set => addressId = value; }
         public JobTitle JobTitle { get => jobTitle; set => jobTitle = value; }
         public string ImagePath { get => imagePath; set => imagePath = value; }
+        public double Lat { get => lat; set => lat = value; }
+        public double Lan { get => lan; set => lan = value; }
+        public string CityName { get => cityName; set => cityName = value; }
+        public string NeighborhoodName { get => neighborhoodName; set => neighborhoodName = value; }
     }
 }

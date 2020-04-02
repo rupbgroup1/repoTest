@@ -13,11 +13,16 @@
         $(document).ready(function () {
            //getCIty();
             //postNewUser();
-            getUser();
+            //getUser();
+            getUserByName();
           
         });
-        function getUser() {
-            ajaxCall("GET", "../api/User/?username=test1@gmail.com", "", succ3, err3);
+        function getUserByName() {
+            searchKeys = {
+                FirstName: "nitzan adar",
+                CityName: "תל מונד"
+            }
+            ajaxCall("POST", "../api/Neighboors/userName", JSON.stringify(searchKeys), succ3, err3);
         }
 
         function succ3(data) {

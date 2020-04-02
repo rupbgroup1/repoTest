@@ -44,14 +44,14 @@ namespace WebApplication1.Models.DAL
 
         //*****************User***************************************
 
-        //add new user
+        //add new user command
         private String BuildInsertCommand(User u)
         {
             String command;
             StringBuilder sb = new StringBuilder();
             // use a string builder to create the dynamic string
-            sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}','{4}','{5}', '{6}' )", u.Email, u.Password, u.FirstName, u.LastName, u.Gender, u.YearOfBirth, u.IsPrivateName);
-            String prefix = "INSERT INTO Users" + "(Email, PasswordUser, FirstName, LastName, Gender, YearOfBirth, IsPrivateName)";
+            sb.AppendFormat("Values('{0}', '{1}' ,'{2}', '{3}','{4}','{5}','{6}', '{7}','{8}','{9}','{10}' )", u.Email, u.Password, u.FirstName, u.LastName, u.Gender, u.YearOfBirth, u.ImagePath, u.Lat, u.Lan, u.CityName, u.NeighborhoodName);
+            String prefix = "INSERT INTO Users" + "(Email, PasswordUser, FirstName, LastName, Gender, YearOfBirth, ImageId, Lat, Long, CityName, NeighborhoodName)";
             command = prefix + sb.ToString();
 
             return command;
@@ -126,9 +126,8 @@ namespace WebApplication1.Models.DAL
                     }
                     if (dr["ImageId"].GetType() != typeof(DBNull))
                     {
-                        userDetails.ImageId = Convert.ToInt32(dr["ImageId"]);
+                        userDetails.ImagePath = (string)dr["ImageId"];
                     }
-                    userDetails.IsPrivateName = Convert.ToBoolean(dr["IsPrivateName"]);
                     if (dr["JobTitleCode"].GetType() != typeof(DBNull))
                     {
                         userDetails.JobTitleId = Convert.ToInt32(dr["JobTitleCode"]);
@@ -149,6 +148,11 @@ namespace WebApplication1.Models.DAL
                     {
                         userDetails.AboutMe = (string)dr["AboutMe"];
                     }
+                    userDetails.CityName = (string)dr["CityName"];
+                    userDetails.Lan = Convert.ToDouble(dr["Long"]);
+
+                    userDetails.Lat = Convert.ToDouble(dr["Lat"]);
+                    userDetails.NeighborhoodName = (string)dr["NeighborhoodName"];
 
                 }
 
@@ -169,8 +173,9 @@ namespace WebApplication1.Models.DAL
             }
         }
 
-        //get user by username and password
+       
         //get - check if there is user with this email in the system
+
         public int GetUserByEmail(string userEmail)
         {
             SqlConnection con = null;
@@ -229,16 +234,164 @@ namespace WebApplication1.Models.DAL
                     userDetails.Gender = Convert.ToInt32(dr["Gender"]);
                     userDetails.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
                     userDetails.AddressId = Convert.ToInt32(dr["StreetCode"]);
-                    userDetails.ImageId = Convert.ToInt32(dr["ImageId"]);
-                    userDetails.IsPrivateName = Convert.ToBoolean(dr["IsPrivateName"]);
+                    userDetails.ImagePath = (string)dr["ImageId"];
                     userDetails.JobTitleId = Convert.ToInt32(dr["JobTitleCode"]);
                     userDetails.WorkPlace = (string)dr["WorkPlace"];
                     userDetails.FamilyStatus = (string)dr["FamilyStatus"];
+                    userDetails.CityName = (string)dr["CityName"];
+                    userDetails.Lan = Convert.ToDouble(dr["Long"]);
+                    userDetails.Lat = Convert.ToDouble(dr["Lat"]);
+
 
 
                 }
 
                 return userDetails;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
+
+        //*****************Neighboors***************************
+        
+        //filter neighboors by search *full* name
+        public List<User> GetAllUsersByfullName(string cityName, string firstName,string lastName)
+        {
+            List<User> userByNameList = new List<User>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, AboutMe FROM Users Where CityName='" + cityName + "' AND (FirstName LIKE '%" + firstName + "%' OR LastName LIKE '%" + firstName + "%') AND (FirstName LIKE '%" + lastName + "%' OR LastName LIKE '%" + lastName + "%') ;";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    User user = new User();
+                    user.UserId = Convert.ToInt32(dr["UserCode"]);
+                    user.FirstName = (string)dr["FirstName"];
+                    user.LastName = (string)dr["LastName"];
+                    user.Gender = Convert.ToInt32(dr["Gender"]);
+                    user.AboutMe = (string)dr["AboutMe"];
+                    //user.Lat = Convert.ToDouble(dr["Lat"]);
+                    //user.Lan = Convert.ToDouble(dr["Lan"]);
+
+                    userByNameList.Add(user);
+                }
+
+                return userByNameList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
+
+        //filter neighboors by search name
+        public List<User> GetAllUsersByName(string cityName, string userName)
+        {
+            List<User> userByNameList = new List<User>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, AboutMe FROM Users Where CityName='" + cityName + "' AND (FirstName LIKE '%" + userName + "%' OR LastName LIKE '%" + userName + "%');";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    User user = new User();
+                    user.UserId = Convert.ToInt32(dr["UserCode"]);
+                    user.FirstName = (string)dr["FirstName"];
+                    user.LastName = (string)dr["LastName"];
+                    user.Gender = Convert.ToInt32(dr["Gender"]);
+                    user.AboutMe = (string)dr["AboutMe"];
+                    //user.Lat = Convert.ToDouble(dr["Lat"]);
+                    //user.Lan = Convert.ToDouble(dr["Lan"]);
+
+                    userByNameList.Add(user);
+                }
+
+                return userByNameList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
+        //filter neighboors by search intrest type
+        public List<User> GetAllUsersByIntrest(string neiName, int userIntrest)
+        {
+            List<User> userByNameList = new List<User>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, AboutMe FROM UsersAndIntrests LEFT JOIN ON UsersAndIntrests.UserCode = Users.UserCode Where NeighborhoodName='" + neiName + "' AND IntrestId="+ userIntrest+"); ";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    User user = new User();
+                    user.UserId = Convert.ToInt32(dr["UserCode"]);
+                    user.FirstName = (string)dr["FirstName"];
+                    user.LastName = (string)dr["LastName"];
+                    user.Gender = Convert.ToInt32(dr["Gender"]);
+                    user.AboutMe = (string)dr["AboutMe"];
+                    //user.Lat = Convert.ToDouble(dr["Lat"]);
+                    //user.Lan = Convert.ToDouble(dr["Lan"]);
+
+                    userByNameList.Add(user);
+                }
+
+                return userByNameList;
             }
             catch (Exception ex)
             {
