@@ -75,6 +75,13 @@ namespace WebApplication1.Models
             
             return dbs.GetAllUsersByfullName(cityName, firstName, lastName);
         }
+        public List<User> GetUsersByIntrest(string neiId, int intrest)
+        {
+            DBservices dbs = new DBservices();
+
+            return dbs.GetUsersByIntrest(neiId, intrest);
+        }
+        
 
         public int UserId { get => userId; set => userId = value; }
         public string Email { get => email; set => email = value; }

@@ -409,17 +409,18 @@ namespace WebApplication1.Models.DAL
         }
 
         //************************address***********************
-
-        public List<City> getAllCities()
+        
+        //Get a list of the neighboorhoods in the city
+        public List<Neighborhood> getAllNeiInCity(string cityName)
         {
-            List<City> cityList = new List<City>();
+            List<Neighborhood> neiList = new List<Neighborhood>();
             SqlConnection con = null;
 
             try
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT * FROM City";
+                String selectSTR = "SELECT NeiID, NeiName FROM Neighborhoods where CityName='"+cityName+"';";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -427,15 +428,14 @@ namespace WebApplication1.Models.DAL
 
                 while (dr.Read())
                 {   // Read till the end of the data into a row
-                    City city = new City();
-                    city.CityCode = Convert.ToInt32(dr["CityCode"]);
-                    city.CityName = (string)dr["CityName"];
-                    city.Size = Convert.ToInt32(dr["Size"]);
+                    Neighborhood nei = new Neighborhood();
+                    nei.NCode = (string)dr["NeiID"];
+                    nei.Name = (string)dr["NeiName"];
 
-                    cityList.Add(city);
+                    neiList.Add(nei);
                 }
 
-                return cityList;
+                return neiList;
             }
             catch (Exception ex)
             {
@@ -452,48 +452,90 @@ namespace WebApplication1.Models.DAL
             }
         }
 
-        public List<Address> getAllStreets(City city)
-        {
-            List<Address> streetsList = new List<Address>();
-            SqlConnection con = null;
-            int cityCode = city.CityCode;
+        //public List<City> getAllCities()
+        //{
+        //    List<City> cityList = new List<City>();
+        //    SqlConnection con = null;
 
-            try
-            {
-                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        //    try
+        //    {
+        //        con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT * FROM Street where CityCode=" + cityCode;
-                SqlCommand cmd = new SqlCommand(selectSTR, con);
+        //        String selectSTR = "SELECT * FROM City";
+        //        SqlCommand cmd = new SqlCommand(selectSTR, con);
 
-                // get a reader
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+        //        // get a reader
+        //        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
 
-                while (dr.Read())
-                {   // Read till the end of the data into a row
-                    Address street = new Address();
-                    street.StreetCode = Convert.ToInt32(dr["StreetCode"]);
-                    street.StreetName = (string)dr["StreetName"];
-                    street.StreetNum = Convert.ToInt32(dr["StreetCode"]);
-                    streetsList.Add(street);
-                }
+        //        while (dr.Read())
+        //        {   // Read till the end of the data into a row
+        //            City city = new City();
+        //            city.CityCode = Convert.ToInt32(dr["CityCode"]);
+        //            city.CityName = (string)dr["CityName"];
+        //            city.Size = Convert.ToInt32(dr["Size"]);
 
-                return streetsList;
-            }
-            catch (Exception ex)
-            {
-                // write to log
-                throw (ex);
-            }
-            finally
-            {
-                if (con != null)
-                {
-                    con.Close();
-                }
+        //            cityList.Add(city);
+        //        }
 
-            }
+        //        return cityList;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // write to log
+        //        throw (ex);
+        //    }
+        //    finally
+        //    {
+        //        if (con != null)
+        //        {
+        //            con.Close();
+        //        }
 
-        }
+        //    }
+        //}
+
+        //public List<Address> getAllStreets(City city)
+        //{
+        //    List<Address> streetsList = new List<Address>();
+        //    SqlConnection con = null;
+        //    int cityCode = city.CityCode;
+
+        //    try
+        //    {
+        //        con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+        //        String selectSTR = "SELECT * FROM Street where CityCode=" + cityCode;
+        //        SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+        //        // get a reader
+        //        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+        //        while (dr.Read())
+        //        {   // Read till the end of the data into a row
+        //            Address street = new Address();
+        //            street.StreetCode = Convert.ToInt32(dr["StreetCode"]);
+        //            street.StreetName = (string)dr["StreetName"];
+        //            street.StreetNum = Convert.ToInt32(dr["StreetCode"]);
+        //            streetsList.Add(street);
+        //        }
+
+        //        return streetsList;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // write to log
+        //        throw (ex);
+        //    }
+        //    finally
+        //    {
+        //        if (con != null)
+        //        {
+        //            con.Close();
+        //        }
+
+        //    }
+
+        //}
 
     }
 }

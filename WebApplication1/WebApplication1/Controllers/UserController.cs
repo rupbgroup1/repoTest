@@ -10,11 +10,7 @@ namespace WebApplication1.Controllers
 {
     public class UserController : ApiController
     {
-        // GET api/<controller>
-        //public IEnumerable<string> Get()
-        //{
-        //    return new string[] { "value1", "value2" };
-        //}
+        
 
         [HttpGet]
         [Route("api/User")]
