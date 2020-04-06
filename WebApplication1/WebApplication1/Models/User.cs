@@ -79,7 +79,7 @@ namespace WebApplication1.Models
         {
             DBservices dbs = new DBservices();
 
-            return dbs.GetUsersByIntrest(neiId, intrest);
+            return dbs.GetAllUsersByIntrest(neiId, intrest);
         }
         
 

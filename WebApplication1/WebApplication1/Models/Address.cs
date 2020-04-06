@@ -38,10 +38,10 @@ namespace WebApplication1.Models
 
         }
 
-        public List<Address> getAllStreets(City c)
-        {
-            DBservices dbs = new DBservices();
-            return dbs.getAllStreets(c);
-        }
+        //public List<Address> getAllStreets(City c)
+        //{
+        //    DBservices dbs = new DBservices();
+        //    return dbs.getAllStreets(c);
+        //}
     }
 }

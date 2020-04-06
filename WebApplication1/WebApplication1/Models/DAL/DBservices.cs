@@ -148,11 +148,22 @@ namespace WebApplication1.Models.DAL
                     {
                         userDetails.AboutMe = (string)dr["AboutMe"];
                     }
-                    userDetails.CityName = (string)dr["CityName"];
-                    userDetails.Lan = Convert.ToDouble(dr["Long"]);
-
-                    userDetails.Lat = Convert.ToDouble(dr["Lat"]);
-                    userDetails.NeighborhoodName = (string)dr["NeighborhoodName"];
+                    if (dr["CityName"].GetType() != typeof(DBNull))
+                    {
+                        userDetails.CityName = (string)dr["CityName"];
+                    }
+                    if (dr["Long"].GetType() != typeof(DBNull))
+                    {
+                        userDetails.Lan = Convert.ToDouble(dr["Long"]);
+                    }
+                    if (dr["Lat"].GetType() != typeof(DBNull))
+                    {
+                        userDetails.Lat = Convert.ToDouble(dr["Lat"]);
+                    }
+                    if (dr["NeighborhoodName"].GetType() != typeof(DBNull))
+                    {
+                        userDetails.NeighborhoodName = (string)dr["NeighborhoodName"];
+                    }
 
                 }
 
