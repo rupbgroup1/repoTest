@@ -12,9 +12,9 @@
 
         $(document).ready(function () {
            //getCIty();
-            //postNewUser();
+            postNewUser();
             //getUser();
-            getUserByName();
+           // getUserByName();
           
         });
         function getUserByName() {
@@ -43,13 +43,18 @@
         }
         function postNewUser() {
             let newUser = {
-                Email: "test@gmail.com",
-                Password: "123456",
-                FirstName: "nitzan",
-                LastName: "adar",
-                Gender: "1",
-                YearOfBirth: "1994",
-                IsPrivateName: "false"
+                "CityName": "test",
+                    "Email": "Bgroup1@test.com",
+                        "FirstName": "יוזר",
+                            "Gender": 2,
+                                "ImagePath": "",
+                                    "Lan": 34.919683523476124,
+                                        "LastName": "בדיקה",
+                                            "Lat": 32.257277338516815,
+                                                "NeighborhoodName": "test",
+                                                    "Password": "123456",
+                                                        "YearOfBirth": "2011",
+
             }
             ajaxCall("POST", "../api/User", JSON.stringify(newUser), successPost, errorPost);
          }

@@ -301,8 +301,8 @@ namespace WebApplication1.Models.DAL
                     user.LastName = (string)dr["LastName"];
                     user.Gender = Convert.ToInt32(dr["Gender"]);
                     user.AboutMe = (string)dr["AboutMe"];
-                    //user.Lat = Convert.ToDouble(dr["Lat"]);
-                    //user.Lan = Convert.ToDouble(dr["Lan"]);
+                    user.Lat = Convert.ToDouble(dr["Lat"]);
+                    user.Lan = Convert.ToDouble(dr["Lan"]);
 
                     userByNameList.Add(user);
                 }
@@ -349,8 +349,8 @@ namespace WebApplication1.Models.DAL
                     user.LastName = (string)dr["LastName"];
                     user.Gender = Convert.ToInt32(dr["Gender"]);
                     user.AboutMe = (string)dr["AboutMe"];
-                    //user.Lat = Convert.ToDouble(dr["Lat"]);
-                    //user.Lan = Convert.ToDouble(dr["Lan"]);
+                    user.Lat = Convert.ToDouble(dr["Lat"]);
+                    user.Lan = Convert.ToDouble(dr["Lan"]);
 
                     userByNameList.Add(user);
                 }
@@ -396,8 +396,8 @@ namespace WebApplication1.Models.DAL
                     user.LastName = (string)dr["LastName"];
                     user.Gender = Convert.ToInt32(dr["Gender"]);
                     user.AboutMe = (string)dr["AboutMe"];
-                    //user.Lat = Convert.ToDouble(dr["Lat"]);
-                    //user.Lan = Convert.ToDouble(dr["Lan"]);
+                    user.Lat = Convert.ToDouble(dr["Lat"]);
+                    user.Lan = Convert.ToDouble(dr["Lan"]);
 
                     userByNameList.Add(user);
                 }

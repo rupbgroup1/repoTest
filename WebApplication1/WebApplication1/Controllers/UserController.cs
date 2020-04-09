@@ -21,6 +21,8 @@ namespace WebApplication1.Controllers
         }
 
         // POST api/User
+        [HttpPost]
+        [Route("api/User")]
         public int Post([FromBody]User value)
         {
             User newUser = new User();
