@@ -4,15 +4,19 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
     public class IntrestsController : ApiController
     {
         // GET api/<controller>
-        public IEnumerable<string> Get()
+        [HttpGet]
+        [Route("api/Intrests")]
+        public List<Intrests> Get()
         {
-            return new string[] { "value1", "value2" };
+            Intrests intrest = new Intrests();
+           return intrest.GetAllIntrests();
         }
 
         // GET api/<controller>/5

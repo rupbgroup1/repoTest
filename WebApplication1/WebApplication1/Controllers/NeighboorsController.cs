@@ -18,10 +18,10 @@ namespace WebApplication1.Controllers
             User user = new User();
             if (u.FirstName.Contains(' ')) {
                 string[] fullName = u.FirstName.Split(' ');
-                return user.GetAllUsersByfullName(u.CityName, fullName[0], fullName[1]);
+                return user.GetAllUsersByfullName(u.NeighborhoodName, fullName[0], fullName[1]);
                 
             }
-            else return user.GetAllUsersByName(u.CityName, u.FirstName);
+            else return user.GetAllUsersByName(u.NeighborhoodName, u.FirstName);
         }
 
         [HttpPost]

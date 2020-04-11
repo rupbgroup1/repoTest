@@ -278,7 +278,7 @@ namespace WebApplication1.Models.DAL
         //*****************Neighboors***************************
         
         //filter neighboors by search *full* name
-        public List<User> GetAllUsersByfullName(string cityName, string firstName,string lastName)
+        public List<User> GetAllUsersByfullName(string neiName, string firstName,string lastName)
         {
             List<User> userByNameList = new List<User>();
             SqlConnection con = null;
@@ -287,7 +287,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, AboutMe FROM Users Where CityName='" + cityName + "' AND (FirstName LIKE '%" + firstName + "%' OR LastName LIKE '%" + firstName + "%') AND (FirstName LIKE '%" + lastName + "%' OR LastName LIKE '%" + lastName + "%') ;";
+                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, AboutMe, Long, Lat FROM Users Where NeighborhoodName='" + neiName + "' AND (FirstName LIKE '%" + firstName + "%' OR LastName LIKE '%" + firstName + "%') AND (FirstName LIKE '%" + lastName + "%' OR LastName LIKE '%" + lastName + "%') ;";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -300,9 +300,13 @@ namespace WebApplication1.Models.DAL
                     user.FirstName = (string)dr["FirstName"];
                     user.LastName = (string)dr["LastName"];
                     user.Gender = Convert.ToInt32(dr["Gender"]);
-                    user.AboutMe = (string)dr["AboutMe"];
+                    if (dr["AboutMe"].GetType() != typeof(DBNull))
+                    {
+                        user.AboutMe = (string)dr["AboutMe"];
+                    }
+                    user.Lan = Convert.ToDouble(dr["Long"]);
                     user.Lat = Convert.ToDouble(dr["Lat"]);
-                    user.Lan = Convert.ToDouble(dr["Lan"]);
+                    
 
                     userByNameList.Add(user);
                 }
@@ -322,11 +326,12 @@ namespace WebApplication1.Models.DAL
                 }
 
             }
+
         }
 
 
         //filter neighboors by search name
-        public List<User> GetAllUsersByName(string cityName, string userName)
+        public List<User> GetAllUsersByName(string neiName, string userName)
         {
             List<User> userByNameList = new List<User>();
             SqlConnection con = null;
@@ -335,7 +340,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, AboutMe FROM Users Where CityName='" + cityName + "' AND (FirstName LIKE '%" + userName + "%' OR LastName LIKE '%" + userName + "%');";
+                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, AboutMe, Long, Lat FROM Users Where NeighborhoodName='" + neiName + "' AND (FirstName LIKE '%" + userName + "%' OR LastName LIKE '%" + userName + "%');";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -348,9 +353,13 @@ namespace WebApplication1.Models.DAL
                     user.FirstName = (string)dr["FirstName"];
                     user.LastName = (string)dr["LastName"];
                     user.Gender = Convert.ToInt32(dr["Gender"]);
-                    user.AboutMe = (string)dr["AboutMe"];
+                    if (dr["AboutMe"].GetType() != typeof(DBNull))
+                    {
+                        user.AboutMe = (string)dr["AboutMe"];
+                    }
+                    user.Lan = Convert.ToDouble(dr["Long"]);
                     user.Lat = Convert.ToDouble(dr["Lat"]);
-                    user.Lan = Convert.ToDouble(dr["Lan"]);
+                    
 
                     userByNameList.Add(user);
                 }
@@ -372,6 +381,53 @@ namespace WebApplication1.Models.DAL
             }
         }
 
+        //get all neighboors with extraReg
+        //need to fix!!
+        public List<User> getAllUsersInNei(string neiName, int userId)
+        {
+            List<User> userInNeiList = new List<User>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "SELECT * FROM Users LEFT JOIN ON UsersAndIntrests.UserCode = Users.UserCode Where NeighborhoodName=";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    User user = new User();
+                    user.UserId = Convert.ToInt32(dr["UserCode"]);
+                    user.FirstName = (string)dr["FirstName"];
+                    user.LastName = (string)dr["LastName"];
+                    user.Gender = Convert.ToInt32(dr["Gender"]);
+                    user.AboutMe = (string)dr["AboutMe"];
+                    user.Lat = Convert.ToDouble(dr["Lat"]);
+                    user.Lan = Convert.ToDouble(dr["long"]);
+
+                    userInNeiList.Add(user);
+                }
+
+                return userInNeiList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
         //filter neighboors by search intrest type
         public List<User> GetAllUsersByIntrest(string neiName, int userIntrest)
         {
@@ -397,7 +453,7 @@ namespace WebApplication1.Models.DAL
                     user.Gender = Convert.ToInt32(dr["Gender"]);
                     user.AboutMe = (string)dr["AboutMe"];
                     user.Lat = Convert.ToDouble(dr["Lat"]);
-                    user.Lan = Convert.ToDouble(dr["Lan"]);
+                    user.Lan = Convert.ToDouble(dr["Long"]);
 
                     userByNameList.Add(user);
                 }
@@ -418,9 +474,55 @@ namespace WebApplication1.Models.DAL
 
             }
         }
+        //**********************Intrests************************
+
+            //get all intrests from db
+        public List<Intrests> GetAllIntrests()
+        {
+            List<Intrests> allIntrests = new List<Intrests>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "select distinct MainCat, SubCat, Id, Icon from Interests where Icon IS NOT NULL";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Intrests interest = new Intrests();
+                    interest.Id = Convert.ToInt32(dr["Id"]);
+                    interest.MainInterest = (string)dr["MainCat"];
+                    interest.Subintrest = (string)dr["SubCat"];
+                    interest.Icon= (string)dr["Icon"];
+
+                    allIntrests.Add(interest);
+                }
+
+                return allIntrests;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
 
         //************************address***********************
-        
+
         //Get a list of the neighboorhoods in the city
         public List<Neighborhood> getAllNeiInCity(string cityName)
         {
@@ -548,5 +650,6 @@ namespace WebApplication1.Models.DAL
 
         //}
 
+        //********************************
     }
 }

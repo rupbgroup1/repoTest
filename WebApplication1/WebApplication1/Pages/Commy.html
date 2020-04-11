@@ -12,17 +12,21 @@
 
         $(document).ready(function () {
            //getCIty();
-            postNewUser();
-            //getUser();
-           // getUserByName();
+            //postNewUser();
+           //getUser();
+           //getUserByName();
+            getInterests();
           
         });
         function getUserByName() {
             searchKeys = {
-                FirstName: "nitzan adar",
-                CityName: "תל מונד"
+                FirstName: "גק",
+                CityName: "test"
             }
             ajaxCall("POST", "../api/Neighboors/userName", JSON.stringify(searchKeys), succ3, err3);
+        }
+        function getInterests() {
+            ajaxCall("GET", "../api/Intrests", "", succ2, err2);
         }
 
         function succ3(data) {
@@ -44,16 +48,16 @@
         function postNewUser() {
             let newUser = {
                 "CityName": "test",
-                    "Email": "Bgroup1@test.com",
-                        "FirstName": "יוזר",
+                    "Email": "Bgroup21@test.com",
+                        "FirstName": "גק",
                             "Gender": 2,
-                                "ImagePath": "",
+                "ImagePath": "https://cdn1.iconfinder.com/data/icons/business-users/512/circle-512.png",
                                     "Lan": 34.919683523476124,
-                                        "LastName": "בדיקה",
-                                            "Lat": 32.257277338516815,
+                                        "LastName": "שפרד",
+                                            "Lat": 32.257277338516821,
                                                 "NeighborhoodName": "test",
                                                     "Password": "123456",
-                                                        "YearOfBirth": "2011",
+                                                        "YearOfBirth": "1981",
 
             }
             ajaxCall("POST", "../api/User", JSON.stringify(newUser), successPost, errorPost);

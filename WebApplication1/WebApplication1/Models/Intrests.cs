@@ -2,21 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using WebApplication1.Models.DAL;
 
 namespace WebApplication1.Models
 {
     public class Intrests
     {
         int id;
-        string intrestName;
+        string subintrest;
+        string mainInterest;
+        string icon;
 
-        public Intrests(int id, string intrestName)
+        public Intrests()
         {
-            Id = id;
-            IntrestName = intrestName;
         }
 
         public int Id { get => id; set => id = value; }
-        public string IntrestName { get => intrestName; set => intrestName = value; }
+        public string Subintrest { get => subintrest; set => subintrest = value; }
+        public string MainInterest { get => mainInterest; set => mainInterest = value; }
+        public string Icon { get => icon; set => icon = value; }
+
+        //returns all Interests
+        public List<Intrests> GetAllIntrests(){
+            DBservices dbs = new DBservices();
+            return dbs.GetAllIntrests();
+        }
     }
 }
