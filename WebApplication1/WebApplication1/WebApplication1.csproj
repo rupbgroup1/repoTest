@@ -191,6 +191,7 @@
     <Compile Include="Controllers\CityController.cs" />
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\IntrestsController.cs" />
+    <Compile Include="Controllers\JobsController.cs" />
     <Compile Include="Controllers\Neighboorhoods.cs" />
     <Compile Include="Controllers\NeighboorsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
@@ -257,6 +258,8 @@
     <None Include="Properties\PublishProfiles\FolderProfile3.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile4.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile5.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile6.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile7.pubxml" />
     <None Include="Scripts\jquery-3.3.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.3.1.js" />
     <Content Include="Scripts\jquery-3.3.1.min.js" />

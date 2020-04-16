@@ -22,10 +22,18 @@ namespace WebApplication1.Models
         public string MainInterest { get => mainInterest; set => mainInterest = value; }
         public string Icon { get => icon; set => icon = value; }
 
-        //returns all Interests
+        //returns all main Interests
         public List<Intrests> GetAllIntrests(){
             DBservices dbs = new DBservices();
             return dbs.GetAllIntrests();
         }
+
+        //returns sub Interests
+        public List<Intrests> GetAllSubIntrests(string main)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetSubIntrests(main);
+        }
+        
     }
 }

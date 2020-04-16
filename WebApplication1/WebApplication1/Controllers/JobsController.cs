@@ -4,15 +4,19 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
     public class JobsController : ApiController
     {
-        // GET api/<controller>
-        public IEnumerable<string> Get()
+        // GET Jobtitle
+        [HttpGet]
+        [Route("api/JobTitle")]
+        public List<JobTitle> Get()
         {
-            return new string[] { "value1", "value2" };
+            JobTitle jt = new JobTitle();
+            return jt.GetAllJT();
         }
 
         // GET api/<controller>/5

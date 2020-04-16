@@ -13,10 +13,10 @@
         $(document).ready(function () {
            //getCIty();
             //postNewUser();
-           getUser();
+          // getUser();
            //getUserByName();
-            //getInterests();
-          
+            getInterests();
+            //GETI();
         });
         function getUserByName() {
             searchKeys = {
@@ -34,6 +34,10 @@
         }
         function getInterests() {
             ajaxCall("GET", "../api/Intrests", "", succ2, err2);
+        }
+        
+        function GETI() {
+            ajaxCall("GET", "../api/Intrests/Sub?mainI=ספורט", "", succ2, err2);
         }
 
         function succ3(data) {

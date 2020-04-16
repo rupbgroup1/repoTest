@@ -475,9 +475,94 @@ namespace WebApplication1.Models.DAL
 
             }
         }
+
+        //**********************JOB-TITLE************************
+
+        //get all jt
+        public List<JobTitle> GetAllJT()
+        {
+            List<JobTitle> allJT = new List<JobTitle>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "select * FROM JobTitle";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    JobTitle JT = new JobTitle();
+                    JT.JobCode = Convert.ToInt32(dr["Code"]);
+                    JT.JobName = (string)dr["JobName"];
+
+                    allJT.Add(JT);
+                }
+
+                return allJT;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
         //**********************Intrests************************
 
-            //get all intrests from db
+        //get sub intrests by mainInerest
+        public List<Intrests> GetSubIntrests(string mainI)
+        {
+            List<Intrests> allIntrests = new List<Intrests>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "select Id, SubCat from Interests where MainCat='" + mainI + "';";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Intrests interest = new Intrests();
+                    interest.Id = Convert.ToInt32(dr["Id"]);
+                    interest.Subintrest = (string)dr["SubCat"];
+
+                    allIntrests.Add(interest);
+                }
+
+                return allIntrests;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+        //get all intrests from db
         public List<Intrests> GetAllIntrests()
         {
             List<Intrests> allIntrests = new List<Intrests>();

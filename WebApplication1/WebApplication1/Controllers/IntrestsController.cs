@@ -10,13 +10,21 @@ namespace WebApplication1.Controllers
 {
     public class IntrestsController : ApiController
     {
-        // GET api/<controller>
+        // GET Main interests
         [HttpGet]
         [Route("api/Intrests")]
         public List<Intrests> Get()
         {
             Intrests intrest = new Intrests();
-           return intrest.GetAllIntrests();
+            return intrest.GetAllIntrests();
+        }
+        // GET Sub interests
+        [HttpGet]
+        [Route("api/Intrests/Sub")]
+        public List<Intrests> Get(string mainI)
+        {
+            Intrests intrest = new Intrests();
+            return intrest.GetAllSubIntrests(mainI);
         }
 
         // GET api/<controller>/5
