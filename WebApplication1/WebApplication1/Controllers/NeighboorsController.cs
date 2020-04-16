@@ -24,9 +24,10 @@ namespace WebApplication1.Controllers
             else return user.GetAllUsersByName(u.NeighborhoodName, u.FirstName);
         }
 
-        [HttpPost]
-        [Route("api/Neighboors/Intrest")]
-        public List<User> GetUsersByIntrest([FromBody]string NeighborhoodName, [FromBody]int intrestId)
+        [HttpGet]
+        [Route("api/Neighboors/Intrest/{NeighborhoodName}/{intrestId}")]
+        //[Route("api/YOURCONTROLLER/{paramOne}/{paramTwo}")]
+        public List<User> GetUsersByIntrest(string NeighborhoodName, int intrestId)
         {
             User user = new User();
             return user.GetUsersByIntrest(NeighborhoodName, intrestId);

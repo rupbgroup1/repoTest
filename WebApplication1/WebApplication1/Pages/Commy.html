@@ -13,17 +13,14 @@
         $(document).ready(function () {
            //getCIty();
             //postNewUser();
-          // getUser();
-           //getUserByName();
-            getInterests();
+           getUser();
+          // getUserByI();
+            //getInterests();
             //GETI();
         });
-        function getUserByName() {
-            searchKeys = {
-                FirstName: "גק",
-                CityName: "test"
-            }
-            ajaxCall("POST", "../api/Neighboors/userName", JSON.stringify(searchKeys), succ3, err3);
+        function getUserByI() {
+            
+            ajaxCall("GET", "../api/Neighboors/Intrest/test/34", "", succ3, err3);
         }
         function getUser() {
             searchKeys = {
