@@ -746,47 +746,46 @@ namespace WebApplication1.Models.DAL
             }
         }
 
-        //public List<City> getAllCities()
-        //{
-        //    List<City> cityList = new List<City>();
-        //    SqlConnection con = null;
+        public List<City> getAllCities()
+        {
+            List<City> cityList = new List<City>();
+            SqlConnection con = null;
 
-        //    try
-        //    {
-        //        con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-        //        String selectSTR = "SELECT * FROM City";
-        //        SqlCommand cmd = new SqlCommand(selectSTR, con);
+                String selectSTR = "SELECT CityCode,CityName FROM City";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
 
-        //        // get a reader
-        //        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
 
-        //        while (dr.Read())
-        //        {   // Read till the end of the data into a row
-        //            City city = new City();
-        //            city.CityCode = Convert.ToInt32(dr["CityCode"]);
-        //            city.CityName = (string)dr["CityName"];
-        //            city.Size = Convert.ToInt32(dr["Size"]);
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    City city = new City();
+                    city.CityCode = Convert.ToInt32(dr["CityCode"]);
+                    city.CityName = (string)dr["CityName"];
 
-        //            cityList.Add(city);
-        //        }
+                    cityList.Add(city);
+                }
 
-        //        return cityList;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // write to log
-        //        throw (ex);
-        //    }
-        //    finally
-        //    {
-        //        if (con != null)
-        //        {
-        //            con.Close();
-        //        }
+                return cityList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
 
-        //    }
-        //}
+            }
+        }
 
         //public List<Address> getAllStreets(City city)
         //{

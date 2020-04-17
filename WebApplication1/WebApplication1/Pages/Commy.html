@@ -11,9 +11,9 @@
     <script>
 
         $(document).ready(function () {
-           //getCIty();
+           getCIty();
             //postNewUser();
-           getUser();
+          // getUser();
           // getUserByI();
             //getInterests();
             //GETI();
@@ -44,7 +44,7 @@
             console.log(data);
         }
         function getCIty(){
-            ajaxCalls("GET", "../api/City", "", succ2, err2);
+            ajaxCall("GET", "../api/City", "", succ2, err2);
         }
    
         function succ2(data) {
