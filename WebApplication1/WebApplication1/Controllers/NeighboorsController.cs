@@ -19,7 +19,6 @@ namespace WebApplication1.Controllers
             if (u.FirstName.Contains(' ')) {
                 string[] fullName = u.FirstName.Split(' ');
                 return user.GetAllUsersByfullName(u.NeighborhoodName, fullName[0], fullName[1]);
-                
             }
             else return user.GetAllUsersByName(u.NeighborhoodName, u.FirstName);
         }

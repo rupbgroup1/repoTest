@@ -11,7 +11,7 @@ namespace WebApplication1.Models.DAL
 {
     public class DBservices
     {
-        
+
         public SqlDataAdapter da;
         public DataTable dt;
 
@@ -109,8 +109,8 @@ namespace WebApplication1.Models.DAL
             User.Kids = kArray;
             return User;
         }
-        
-            public Kids[] getUserByDetailsKids(User u)
+
+        public Kids[] getUserByDetailsKids(User u)
         {
             SqlConnection con = null;
 
@@ -124,8 +124,8 @@ namespace WebApplication1.Models.DAL
                 while (dr.Read())
                 {
                     Kids k = new Kids();
-                    k.Id= Convert.ToInt32(dr["UserCode"]);
-                    k.YearOfBirth= Convert.ToInt32(dr["YearOfBirth"]);
+                    k.Id = Convert.ToInt32(dr["UserCode"]);
+                    k.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
                     allKids.Add(k);
                 }
                 Kids[] kArray = allKids.ToArray();
@@ -208,7 +208,7 @@ namespace WebApplication1.Models.DAL
                     userDetails.LastName = (string)dr["LastName"];
                     userDetails.Gender = Convert.ToInt32(dr["Gender"]);
                     userDetails.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
-                    
+
                     if (dr["ImageId"].GetType() != typeof(DBNull))
                     {
                         userDetails.ImagePath = (string)dr["ImageId"];
@@ -218,7 +218,7 @@ namespace WebApplication1.Models.DAL
                         userDetails.JobTitleId = Convert.ToInt32(dr["JobTitleCode"]);
                         int code = Convert.ToInt32(dr["Code"]);
                         string name = (string)dr["JobName"];
-                        JobTitle JT = new JobTitle(code,name);
+                        JobTitle JT = new JobTitle(code, name);
                         userDetails.JobTitle = JT;
 
                     }
@@ -254,7 +254,7 @@ namespace WebApplication1.Models.DAL
                     {
                         userDetails.NeighborhoodName = (string)dr["NeighborhoodName"];
                     }
-                    
+
                 }
 
                 return userDetails;
@@ -274,7 +274,7 @@ namespace WebApplication1.Models.DAL
             }
         }
 
-       
+
         //get - check if there is user with this email in the system
 
         public int GetUserByEmail(string userEmail)
@@ -289,7 +289,7 @@ namespace WebApplication1.Models.DAL
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); 
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
 
                 while (dr.Read())
                 {
@@ -363,10 +363,234 @@ namespace WebApplication1.Models.DAL
         }
 
 
+        //***************Extra reg**********************
+
+        public int updateUserExtraDetails(User user)
+        {
+            deletefromKidsTable(user);
+            insertIntoKidsTable(user);
+            deletefromInterestsTable(user);
+            insertIntoInterestsTable(user);
+            return updateUsersTable(user);
+        }
+
+        public int updateUsersTable(User user)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            // String cStr = BuildInsertCommand(user);      // helper method to build the insert string
+            String cStr = "Update Users set FamilyStatus='" + user.FamilyStatus + "', JobTitleCode=" + user.JobTitleId + ", WorkPlace='" + user.WorkPlace + "', NumberOfChildren=" + user.NumOfChildren + ",AboutMe='" + user.AboutMe + "' where UserCode=" + user.UserId;
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        public int deletefromKidsTable(User user)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            // String cStr = BuildInsertCommand(user);      // helper method to build the insert string
+            String cStr = "DELETE FROM KidsAge WHERE UserCode=" + user.UserId;
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+        public int insertIntoKidsTable(User user)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            //build insert query
+            string values = "";
+            for (int i = 0; i < user.Kids.Length; i++)
+            {
+                if (i != 0)
+                    values += ",";
+                values += "(" + user.Kids[i].Id + "," + user.Kids[i].YearOfBirth + ")";
+            }
+            // String cStr = BuildInsertCommand(user);      // helper method to build the insert string
+            String cStr = "INSERT INTO KidsAge (UserCode, YearOfBirth) VALUES " + values;
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        //Interests
+        public int deletefromInterestsTable(User user)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = "DELETE FROM UsersAndIntrests WHERE UserCode=" + user.UserId;
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+        public int insertIntoInterestsTable(User user)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            //build insert query
+            string values = "";
+            for (int i = 0; i < user.Intrests.Length; i++)
+            {
+                if (i != 0)
+                    values += ",";
+                values += "(" + user.UserId + "," + user.Intrests[i].Id + ")";
+            }
+            // String cStr = BuildInsertCommand(user);      // helper method to build the insert string
+            String cStr = "INSERT INTO UsersAndIntrests (UserCode, IntrestId) VALUES " + values;
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
         //*****************Neighboors***************************
-        
+
         //filter neighboors by search *full* name
-        public List<User> GetAllUsersByfullName(string neiName, string firstName,string lastName)
+        public List<User> GetAllUsersByfullName(string neiName, string firstName, string lastName)
         {
             List<User> userByNameList = new List<User>();
             SqlConnection con = null;
@@ -394,7 +618,7 @@ namespace WebApplication1.Models.DAL
                     }
                     user.Lan = Convert.ToDouble(dr["Long"]);
                     user.Lat = Convert.ToDouble(dr["Lat"]);
-                    
+
 
                     userByNameList.Add(user);
                 }
@@ -447,7 +671,7 @@ namespace WebApplication1.Models.DAL
                     }
                     user.Lan = Convert.ToDouble(dr["Long"]);
                     user.Lat = Convert.ToDouble(dr["Lat"]);
-                    
+
 
                     userByNameList.Add(user);
                 }
@@ -529,8 +753,8 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT Users.UserCode, FirstName, LastName, Gender, AboutMe, Lat,Long FROM Users LEFT JOIN UsersAndIntrests  ON Users.UserCode = UsersAndIntrests.UserCode Where NeighborhoodName='" + neiName + "' AND IntrestId="+ userIntrest;
-                
+                String selectSTR = "SELECT Users.UserCode, FirstName, LastName, Gender, AboutMe, Lat,Long FROM Users LEFT JOIN UsersAndIntrests  ON Users.UserCode = UsersAndIntrests.UserCode Where NeighborhoodName='" + neiName + "' AND IntrestId=" + userIntrest;
+
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
 
@@ -679,7 +903,7 @@ namespace WebApplication1.Models.DAL
                     interest.Id = Convert.ToInt32(dr["Id"]);
                     interest.MainInterest = (string)dr["MainCat"];
                     interest.Subintrest = (string)dr["SubCat"];
-                    interest.Icon= (string)dr["Icon"];
+                    interest.Icon = (string)dr["Icon"];
 
                     allIntrests.Add(interest);
                 }
@@ -714,7 +938,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT NeiID, NeiName FROM Neighborhoods where CityName='"+cityName+"';";
+                String selectSTR = "SELECT NeiID, NeiName FROM Neighborhoods where CityName='" + cityName + "';";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader

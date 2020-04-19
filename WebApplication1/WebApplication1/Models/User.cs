@@ -74,7 +74,14 @@ namespace WebApplication1.Models
 
             return dbs.GetAllUsersByIntrest(neiId, intrest);
         }
+
+        public int updateUserExtraDetails(User u)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.updateUserExtraDetails(u);
+        }
         
+
 
         public int UserId { get => userId; set => userId = value; }
         public string Email { get => email; set => email = value; }
