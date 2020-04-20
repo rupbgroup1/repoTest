@@ -80,7 +80,15 @@ namespace WebApplication1.Models
             DBservices dbs = new DBservices();
             return dbs.updateUserExtraDetails(u);
         }
+
+        public List<User> GetUsersMatch(int userId)
+        {
+            DBservices dbs = new DBservices();
+
+            return dbs.GetUsersMatch(userId);
+        }
         
+
 
 
         public int UserId { get => userId; set => userId = value; }

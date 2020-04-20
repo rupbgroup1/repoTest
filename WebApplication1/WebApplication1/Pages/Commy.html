@@ -17,7 +17,8 @@
           // getUserByI();
             //getInterests();
             //GETI();
-            put();
+          //  put();
+            getMatch();
         });
         function getUserByI() {
             
@@ -29,6 +30,10 @@
                 Password: "123456"
             }
             ajaxCall("POST", "../api/User/login", JSON.stringify(searchKeys), succ2, err2);
+        }
+
+        function getMatch() {
+            ajaxCall("GET", "../api/Neighboors/Match?userId=1", "", succ3, err3);
         }
 
         function put() {

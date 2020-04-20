@@ -694,7 +694,6 @@ namespace WebApplication1.Models.DAL
         }
 
         //get all neighboors with extraReg
-        //need to fix!!
         public List<User> getAllUsersInNei(string neiName, int userId)
         {
             List<User> userInNeiList = new List<User>();
@@ -743,6 +742,61 @@ namespace WebApplication1.Models.DAL
 
             }
         }
+
+        //call match element
+        public List<User> GetUsersMatch(int userId)
+        {
+            List<User> usersMatchList = new List<User>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+                SqlCommand cmd = new SqlCommand("SP_calculateMatch", con);
+
+                // 2. set the command object so it knows to execute a stored procedure
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                // 3. add parameter to command, which will be passed to the stored procedure
+                cmd.Parameters.Add(new SqlParameter("@userCode", userId));
+                // execute the command
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {   
+                    User user = new User();
+                    user.UserId = Convert.ToInt32(dr["UserCode"]);
+                    user.FirstName = (string)dr["FirstName"];
+                    user.LastName = (string)dr["LastName"];
+                    user.Gender = Convert.ToInt32(dr["Gender"]);
+                    if (dr["AboutMe"].GetType() != typeof(DBNull))
+                    {
+                        user.AboutMe = (string)dr["AboutMe"];
+                    }
+                    user.Lan = Convert.ToDouble(dr["Long"]);
+                    user.Lat = Convert.ToDouble(dr["Lat"]);
+
+
+                    usersMatchList.Add(user);
+                }
+
+                return usersMatchList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
         //filter neighboors by search intrest type
         public List<User> GetAllUsersByIntrest(string neiName, int userIntrest)
         {

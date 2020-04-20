@@ -25,17 +25,18 @@ namespace WebApplication1.Controllers
 
         [HttpGet]
         [Route("api/Neighboors/Intrest/{NeighborhoodName}/{intrestId}")]
-        //[Route("api/YOURCONTROLLER/{paramOne}/{paramTwo}")]
         public List<User> GetUsersByIntrest(string NeighborhoodName, int intrestId)
         {
             User user = new User();
             return user.GetUsersByIntrest(NeighborhoodName, intrestId);
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        [HttpGet]
+        [Route("api/Neighboors/Match")]
+        public List<User> GetUsersMatch(int userId)
         {
-            return "value";
+            User user = new User();
+            return user.GetUsersMatch(userId);
         }
 
         // POST api/<controller>
