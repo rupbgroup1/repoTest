@@ -11,19 +11,18 @@
     <script>
 
         $(document).ready(function () {
-           //getCIty();
+          // getCIty();
             //postNewUser();
           // getUser();
-           //getUserByName();
-            getInterests();
+          // getUserByI();
+            //getInterests();
             //GETI();
+          //  put();
+            getMatch();
         });
-        function getUserByName() {
-            searchKeys = {
-                FirstName: "גק",
-                CityName: "test"
-            }
-            ajaxCall("POST", "../api/Neighboors/userName", JSON.stringify(searchKeys), succ3, err3);
+        function getUserByI() {
+            
+            ajaxCall("GET", "../api/Neighboors/Intrest/test/34", "", succ3, err3);
         }
         function getUser() {
             searchKeys = {
@@ -31,6 +30,24 @@
                 Password: "123456"
             }
             ajaxCall("POST", "../api/User/login", JSON.stringify(searchKeys), succ2, err2);
+        }
+
+        function getMatch() {
+            ajaxCall("GET", "../api/Neighboors/Match?userId=1", "", succ3, err3);
+        }
+
+        function put() {
+            searchKeys = {
+                UserId: 48,
+                JobTitleId: 23,
+                WorkPlace: "חיפה",
+                FamilyStatus: "רווק/ה",
+                NumOfChildren: 2,
+                AboutMe: "להלהלה",
+                Kids: [{ Id: 48, YearOfBirth: 2019 }],
+                Intrests: [{ Id: 78 }, { Id: 56 }, { Id: 7 }]
+            }
+            ajaxCall("PUT", "../api/User/Extra", JSON.stringify(searchKeys), succ2, err2);
         }
         function getInterests() {
             ajaxCall("GET", "../api/Intrests", "", succ2, err2);
@@ -47,7 +64,7 @@
             console.log(data);
         }
         function getCIty(){
-            ajaxCalls("GET", "../api/City", "", succ2, err2);
+            ajaxCall("GET", "../api/City", "", succ2, err2);
         }
    
         function succ2(data) {

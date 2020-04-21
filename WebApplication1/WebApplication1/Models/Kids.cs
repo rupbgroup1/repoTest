@@ -19,5 +19,6 @@ namespace WebApplication1.Models
             Id = id;
             YearOfBirth = yearOfBirth;
         }
+        public Kids() { }
     }
 }

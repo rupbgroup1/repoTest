@@ -19,23 +19,24 @@ namespace WebApplication1.Controllers
             if (u.FirstName.Contains(' ')) {
                 string[] fullName = u.FirstName.Split(' ');
                 return user.GetAllUsersByfullName(u.NeighborhoodName, fullName[0], fullName[1]);
-                
             }
             else return user.GetAllUsersByName(u.NeighborhoodName, u.FirstName);
         }
 
-        [HttpPost]
-        [Route("api/Neighboors/Intrest")]
-        public List<User> GetUsersByIntrest([FromBody]string NeighborhoodName, [FromBody]int intrestId)
+        [HttpGet]
+        [Route("api/Neighboors/Intrest/{NeighborhoodName}/{intrestId}")]
+        public List<User> GetUsersByIntrest(string NeighborhoodName, int intrestId)
         {
             User user = new User();
             return user.GetUsersByIntrest(NeighborhoodName, intrestId);
         }
 
-        // GET api/<controller>/5
-        public string Get(int id)
+        [HttpGet]
+        [Route("api/Neighboors/Match")]
+        public List<User> GetUsersMatch(int userId)
         {
-            return "value";
+            User user = new User();
+            return user.GetUsersMatch(userId);
         }
 
         // POST api/<controller>

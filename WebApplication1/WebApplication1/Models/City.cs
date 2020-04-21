@@ -27,10 +27,10 @@ namespace WebApplication1.Models
 
         }
 
-        //public List<City> getAllCities()
-        //{
-        //    DBservices dbs = new DBservices();
-        //    return dbs.getAllCities();
-        //}
+        public List<City> getAllCities()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.getAllCities();
+        }
     }
 }

@@ -16,6 +16,10 @@ namespace WebApplication1.Models
         public Intrests()
         {
         }
+        public Intrests(int id)
+        {
+            Id = id;
+        }
 
         public int Id { get => id; set => id = value; }
         public string Subintrest { get => subintrest; set => subintrest = value; }
