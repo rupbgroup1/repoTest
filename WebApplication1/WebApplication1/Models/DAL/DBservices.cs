@@ -1064,50 +1064,50 @@ namespace WebApplication1.Models.DAL
 
             }
         }
+        //********************************Param***********************************
 
-        //public List<Address> getAllStreets(City city)
-        //{
-        //    List<Address> streetsList = new List<Address>();
-        //    SqlConnection con = null;
-        //    int cityCode = city.CityCode;
 
-        //    try
-        //    {
-        //        con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        public List<Param> getAllParams()
+        {
+            List<Param> allParams = new List<Param>();
+            SqlConnection con = null;
 
-        //        String selectSTR = "SELECT * FROM Street where CityCode=" + cityCode;
-        //        SqlCommand cmd = new SqlCommand(selectSTR, con);
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-        //        // get a reader
-        //        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+                String selectSTR = "select ParamId, NameHeb  from Params";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
 
-        //        while (dr.Read())
-        //        {   // Read till the end of the data into a row
-        //            Address street = new Address();
-        //            street.StreetCode = Convert.ToInt32(dr["StreetCode"]);
-        //            street.StreetName = (string)dr["StreetName"];
-        //            street.StreetNum = Convert.ToInt32(dr["StreetCode"]);
-        //            streetsList.Add(street);
-        //        }
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
 
-        //        return streetsList;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // write to log
-        //        throw (ex);
-        //    }
-        //    finally
-        //    {
-        //        if (con != null)
-        //        {
-        //            con.Close();
-        //        }
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Param param = new Param();
+                    param.ParamCode = Convert.ToInt32(dr["ParamId"]);
+                    param.ParamName = (string)dr["ParamName"];
+                    param.ParamName = (string)dr["NameHeb"];
+                    
+                    allParams.Add(param);
+                }
 
-        //    }
+                return allParams;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
 
-        //}
-
-        //********************************
+            }
+        }
+       
     }
 }
