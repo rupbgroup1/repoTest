@@ -1108,6 +1108,63 @@ namespace WebApplication1.Models.DAL
 
         //}
 
-        //********************************
+        //*****************Votes***************************
+
+        //Build Insert Command for adding vote to Params table
+        private String BuildInsertCommand(int c)
+        {
+            int vote = 1;
+            String command;
+            StringBuilder sb = new StringBuilder();
+            // use a string builder to create the dynamic string
+            sb.AppendFormat("Values('{3}' )", c);
+            String prefix = "UPDATE Params SET Votes= + 1 WHERE ParamId ="+ c;
+
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        //add new vote
+        public int addNewVoteToDB(int categoryId)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildInsertCommand(categoryId);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
     }
 }
