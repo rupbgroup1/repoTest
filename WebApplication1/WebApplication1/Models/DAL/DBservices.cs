@@ -1064,6 +1064,7 @@ namespace WebApplication1.Models.DAL
 
             }
         }
+        //********************************Param***********************************
 
         //public List<Address> getAllStreets(City city)
         //{
