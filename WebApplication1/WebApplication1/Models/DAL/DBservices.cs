@@ -1066,21 +1066,83 @@ namespace WebApplication1.Models.DAL
         }
         //********************************Param***********************************
 
+        //public List<Address> getAllStreets(City city)
+        //{
+        //    List<Address> streetsList = new List<Address>();
+        //    SqlConnection con = null;
+        //    int cityCode = city.CityCode;
 
-        public List<Param> getAllParams()
+        //    try
+        //    {
+        //        con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+        //        String selectSTR = "SELECT * FROM Street where CityCode=" + cityCode;
+        //        SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+        //        // get a reader
+        //        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+        //        while (dr.Read())
+        //        {   // Read till the end of the data into a row
+        //            Address street = new Address();
+        //            street.StreetCode = Convert.ToInt32(dr["StreetCode"]);
+        //            street.StreetName = (string)dr["StreetName"];
+        //            street.StreetNum = Convert.ToInt32(dr["StreetCode"]);
+        //            streetsList.Add(street);
+        //        }
+
+        //        return streetsList;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // write to log
+        //        throw (ex);
+        //    }
+        //    finally
+        //    {
+        //        if (con != null)
+        //        {
+        //            con.Close();
+        //        }
+
+        //    }
+
+        //}
+
+        //*****************Votes***************************
+
+        //Build Insert Command for adding vote to Params table
+        private String BuildInsertCommand(int c)
         {
-            List<Param> allParams = new List<Param>();
-            SqlConnection con = null;
+            int vote = 1;
+            String command;
+            StringBuilder sb = new StringBuilder();
+            // use a string builder to create the dynamic string
+            sb.AppendFormat("Values('{3}' )", c);
+            String prefix = "UPDATE Params SET Votes= + 1 WHERE ParamId ="+ c;
+
+            command = prefix + sb.ToString();
+
+            return command;
+        }
+
+        //add new vote
+        public int addNewVoteToDB(int categoryId)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
 
             try
             {
-                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
 
-                String selectSTR = "select ParamId, NameHeb  from Params";
-                SqlCommand cmd = new SqlCommand(selectSTR, con);
-
-                // get a reader
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+            String cStr = BuildInsertCommand(categoryId);      // helper method to build the insert string
 
                 while (dr.Read())
                 {   // Read till the end of the data into a row
@@ -1090,23 +1152,28 @@ namespace WebApplication1.Models.DAL
 
                     allParams.Add(param);
                 }
+            cmd = CreateCommand(cStr, con);             // create the command
 
-                return allParams;
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
             }
             catch (Exception ex)
             {
+                return 0;
                 // write to log
                 throw (ex);
             }
+
             finally
             {
                 if (con != null)
                 {
+                    // close the db connection
                     con.Close();
                 }
-
             }
         }
-       
     }
 }
