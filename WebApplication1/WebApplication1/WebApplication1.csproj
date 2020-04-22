@@ -196,6 +196,7 @@
     <Compile Include="Controllers\NeighboorsController.cs" />
     <Compile Include="Controllers\ParamController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Controllers\VotesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -217,6 +218,7 @@
     <Compile Include="Models\Service.cs" />
     <Compile Include="Models\SubCategory.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="Models\Votes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

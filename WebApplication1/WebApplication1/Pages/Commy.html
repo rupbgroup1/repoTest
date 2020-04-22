@@ -19,7 +19,8 @@
             //GETI();
           //  put();
             //getMatch();
-            getParam();
+           // getParam();
+           putParam();
         });
         function getUserByI() {
             
@@ -54,6 +55,14 @@
             }
             ajaxCall("PUT", "../api/User/Extra", JSON.stringify(searchKeys), succ2, err2);
         }
+
+        function putParam() {
+            let param = {
+                "CategoryId": 1
+            }
+            ajaxCall("PUT", "../api/Votes", JSON.stringify(param), succ2, err2);
+        }
+
         function getInterests() {
             ajaxCall("GET", "../api/Intrests", "", succ2, err2);
         }

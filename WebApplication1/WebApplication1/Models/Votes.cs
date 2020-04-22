@@ -1,8 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using WebApplication1.Models.DAL;
 
-public class Class1
+public class Votes
 {
-	public Class1()
-	{
-	}
+    public int CategoryId { get; set; }
+
+    public Votes(int categoryId)
+    {
+        CategoryId = categoryId;
+    }
+
+    public Votes()
+    {
+
+    }
+
+    //add vote to the selected category
+    public int AddNewVoteToDB(int categoryId)
+    {
+        DBservices dbs = new DBservices();
+        return dbs.addNewVoteToDB(categoryId);
+    }
+    
+
+
 }
