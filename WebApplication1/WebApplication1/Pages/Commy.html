@@ -18,11 +18,16 @@
             //getInterests();
             //GETI();
           //  put();
-            getMatch();
+            //getMatch();
+            getParam();
         });
         function getUserByI() {
             
             ajaxCall("GET", "../api/Neighboors/Intrest/test/34", "", succ3, err3);
+        }
+        function getParam() {
+
+            ajaxCall("GET", "../api/Param", "", succ3, err3);
         }
         function getUser() {
             searchKeys = {

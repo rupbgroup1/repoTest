@@ -194,6 +194,7 @@
     <Compile Include="Controllers\JobsController.cs" />
     <Compile Include="Controllers\Neighboorhoods.cs" />
     <Compile Include="Controllers\NeighboorsController.cs" />
+    <Compile Include="Controllers\ParamController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -211,6 +212,7 @@
     <Compile Include="Models\Losts.cs" />
     <Compile Include="Models\MatchingCalculate.cs" />
     <Compile Include="Models\Neighborhood.cs" />
+    <Compile Include="Models\Param.cs" />
     <Compile Include="Models\Post.cs" />
     <Compile Include="Models\Service.cs" />
     <Compile Include="Models\SubCategory.cs" />
@@ -258,6 +260,9 @@
     <None Include="Properties\PublishProfiles\FolderProfile11.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile12.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile13.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile14.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile15.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile16.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile2.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile3.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile4.pubxml" />

@@ -156,7 +156,7 @@ namespace WebApplication1.Models.DAL
             try
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
-                String selectSTR = "select* from UsersAndIntrests left join Interests on UsersAndIntrests.UserCode = Interests.Id  where UserCode =" + u.UserId;
+                String selectSTR = " select Id,MainCat,SubCat from UsersAndIntrests UI left join Interests on UI.IntrestId = Interests.Id  where UI.UserCode =" + u.UserId;
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
                 SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
                 List<Intrests> allIntrests = new List<Intrests>();
@@ -1086,9 +1086,8 @@ namespace WebApplication1.Models.DAL
                 {   // Read till the end of the data into a row
                     Param param = new Param();
                     param.ParamCode = Convert.ToInt32(dr["ParamId"]);
-                    param.ParamName = (string)dr["ParamName"];
                     param.ParamName = (string)dr["NameHeb"];
-                    
+
                     allParams.Add(param);
                 }
 
