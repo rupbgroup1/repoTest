@@ -20,8 +20,14 @@
           //  put();
             //getMatch();
            // getParam();
-           putParam();
+           //putParam();
+            updateUserVotes();
         });
+
+        function updateUserVotes() {
+            ajaxCall("PUT", "../api/Votes/Update", "", succ2, err2);
+        }
+
         function getUserByI() {
             
             ajaxCall("GET", "../api/Neighboors/Intrest/test/34", "", succ3, err3);
@@ -93,7 +99,7 @@
                     "Email": "Bgroup21@test.com",
                         "FirstName": "גק",
                             "Gender": 2,
-                "ImagePath": "https://cdn1.iconfinder.com/data/icons/business-users/512/circle-512.png",
+                                  "ImagePath": "https://cdn1.iconfinder.com/data/icons/business-users/512/circle-512.png",
                                     "Lan": 34.919683523476124,
                                         "LastName": "שפרד",
                                             "Lat": 32.257277338516821,

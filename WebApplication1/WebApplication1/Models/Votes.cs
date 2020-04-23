@@ -24,7 +24,14 @@ public class Votes
         DBservices dbs = new DBservices();
         return dbs.addNewVoteToDB(categoryId);
     }
+
     
+    public int UpdateParamsValue()
+    {
+        DBservices dbs = new DBservices();
+        return dbs.UpdateParamsValue();
+    }
+
 
 
 }

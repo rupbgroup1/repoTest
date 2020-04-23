@@ -35,6 +35,14 @@ namespace WebApplication1.Controllers
            return v.AddNewVoteToDB(value.CategoryId);
         }
 
+        [HttpPut]
+        [Route("api/Votes/Update")]
+        public int Put()
+        {
+            Votes v = new Votes();
+            return v.UpdateParamsValue();
+        }
+
         // DELETE api/<controller>/5
         public void Delete(int id)
         {

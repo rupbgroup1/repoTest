@@ -1113,21 +1113,7 @@ namespace WebApplication1.Models.DAL
 
         //*****************Votes**************************
 
-        //Build Insert Command for adding vote to Params table
-        //private String BuildInsertCommandParams(int ParamID)
-        //{
-        //    //int vote = 1;
-        //    String command;
-        //    StringBuilder sb = new StringBuilder();
-        //    // use a string builder to create the dynamic string
-        //    sb.AppendFormat("Values('{3}' )", ParamID);
-        //    String prefix = ;
-
-        //    command = prefix + sb.ToString();
-
-        //    return command;
-        //}
-
+       
         //add new vote
         public int addNewVoteToDB(int categoryId)
         {
@@ -1144,12 +1130,51 @@ namespace WebApplication1.Models.DAL
                 throw (ex);
             }
 
-            String cStr = "UPDATE Params SET Votes= + 1 WHERE ParamId =" + categoryId;      // helper method to build the insert string
+            String cStr = "UPDATE Params SET Votes= Votes+1 WHERE ParamId =" + categoryId;      // helper method to build the insert string
 
             cmd = CreateCommand(cStr, con);             // create the command
 
             try
             {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        
+            public int UpdateParamsValue()
+        {
+            SqlConnection con;
+            con = connect("DBConnectionString"); // create the connection
+            SqlCommand cmd = new SqlCommand("SP_calculateParamsUser", con);
+
+            try
+            {
+               
+
+                // 2. set the command object so it knows to execute a stored procedure
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                // 3. add parameter to command, which will be passed to the stored procedure
+               // cmd.Parameters.Add(new SqlParameter("@userCode", userId));
+                // execute the command
+               // SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+            
                 int numEffected = cmd.ExecuteNonQuery(); // execute the command
                 return numEffected;
             }
