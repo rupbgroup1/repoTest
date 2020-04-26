@@ -23,6 +23,7 @@
            //putParam();
            // updateUserVotes();
             //startTimer();
+            putPass();
         });
 
         //change to start!!!
@@ -72,6 +73,14 @@
                 "CategoryId": 1
             }
             ajaxCall("PUT", "../api/Votes", JSON.stringify(param), succ2, err2);
+        }
+
+        function putPass() {
+            let user = {
+                "Email": "Bgroup1@test.com",
+                "Password": "123123"
+            }
+            ajaxCall("PUT", "../api/User/Pass", JSON.stringify(user), succ2, err2);
         }
 
         function getInterests() {

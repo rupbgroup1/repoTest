@@ -87,7 +87,13 @@ namespace WebApplication1.Models
 
             return dbs.GetUsersMatch(userId);
         }
-        
+
+        public int updatePassword(User u)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.updatePassword(u);
+        }
+
 
 
 

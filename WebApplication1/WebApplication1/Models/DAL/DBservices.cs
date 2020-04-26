@@ -361,8 +361,46 @@ namespace WebApplication1.Models.DAL
 
             }
         }
+        
+        public int updatePassword(User user)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
 
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
 
+            // String cStr = BuildInsertCommand(user);      // helper method to build the insert string
+            String cStr = "Update Users set PasswordUser='" + user.Password + "' where Email='" + user.Email+"'";
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
         //***************Extra reg**********************
 
         public int updateUserExtraDetails(User user)
@@ -1113,7 +1151,7 @@ namespace WebApplication1.Models.DAL
 
         //*****************Votes**************************
 
-       
+
         //add new vote
         public int addNewVoteToDB(int categoryId)
         {
@@ -1156,8 +1194,8 @@ namespace WebApplication1.Models.DAL
             }
         }
 
-        
-            public int UpdateParamsValue()
+
+        public int UpdateParamsValue()
         {
             SqlConnection con;
             con = connect("DBConnectionString"); // create the connection
@@ -1165,16 +1203,16 @@ namespace WebApplication1.Models.DAL
 
             try
             {
-               
+
 
                 // 2. set the command object so it knows to execute a stored procedure
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 // 3. add parameter to command, which will be passed to the stored procedure
-               // cmd.Parameters.Add(new SqlParameter("@userCode", userId));
+                // cmd.Parameters.Add(new SqlParameter("@userCode", userId));
                 // execute the command
-               // SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-            
+                // SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
                 int numEffected = cmd.ExecuteNonQuery(); // execute the command
                 return numEffected;
             }

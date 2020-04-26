@@ -45,6 +45,14 @@ namespace WebApplication1.Controllers
             return uExtra.updateUserExtraDetails(value);
         }
 
+        [HttpPut]
+        [Route("api/User/Pass")]
+        public int PutPass([FromBody]User value)
+        {
+            User uPass = new User();
+            return uPass.updatePassword(value);
+        }
+
         // DELETE api/<controller>/5
         public void Delete(int id)
         {
