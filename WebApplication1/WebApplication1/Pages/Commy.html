@@ -18,19 +18,23 @@
             //getInterests();
             //GETI();
           //  put();
-            //getMatch();
+           // getMatch();
            // getParam();
            //putParam();
-            updateUserVotes();
+           // updateUserVotes();
+            startTimer();
         });
 
+        function startTimer() {
+            ajaxCall("GET", "../api/Timer/start", "", succ2, err2);
+        } 
         function updateUserVotes() {
             ajaxCall("PUT", "../api/Votes/Update", "", succ2, err2);
         }
 
         function getUserByI() {
             
-            ajaxCall("GET", "../api/Neighboors/Intrest/test/34", "", succ3, err3);
+            ajaxCall("GET", "../api/Neighboors/Intrest/תל מונד/34", "", succ3, err3);
         }
         function getParam() {
 
