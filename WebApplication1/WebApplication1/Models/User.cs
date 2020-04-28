@@ -30,6 +30,7 @@ namespace WebApplication1.Models
         double lan;
         string cityName;
         string neighborhoodName;
+        double matchRate;
         
 
         public User()
@@ -119,5 +120,6 @@ namespace WebApplication1.Models
         public double Lan { get => lan; set => lan = value; }
         public string CityName { get => cityName; set => cityName = value; }
         public string NeighborhoodName { get => neighborhoodName; set => neighborhoodName = value; }
+        public double MatchRate { get => matchRate; set => matchRate = value; }
     }
 }

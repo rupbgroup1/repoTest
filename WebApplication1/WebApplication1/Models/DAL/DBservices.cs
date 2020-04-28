@@ -637,7 +637,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, AboutMe, Long, Lat FROM Users Where NeighborhoodName='" + neiName + "' AND (FirstName LIKE '%" + firstName + "%' OR LastName LIKE '%" + firstName + "%') AND (FirstName LIKE '%" + lastName + "%' OR LastName LIKE '%" + lastName + "%') ;";
+                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, YearOfBirth, AboutMe, Long, Lat FROM Users Where NeighborhoodName='" + neiName + "' AND (FirstName LIKE '%" + firstName + "%' OR LastName LIKE '%" + firstName + "%') AND (FirstName LIKE '%" + lastName + "%' OR LastName LIKE '%" + lastName + "%') ;";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -650,12 +650,14 @@ namespace WebApplication1.Models.DAL
                     user.FirstName = (string)dr["FirstName"];
                     user.LastName = (string)dr["LastName"];
                     user.Gender = Convert.ToInt32(dr["Gender"]);
+                    user.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
                     if (dr["AboutMe"].GetType() != typeof(DBNull))
                     {
                         user.AboutMe = (string)dr["AboutMe"];
                     }
                     user.Lan = Convert.ToDouble(dr["Long"]);
                     user.Lat = Convert.ToDouble(dr["Lat"]);
+                   
 
 
                     userByNameList.Add(user);
@@ -690,7 +692,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, AboutMe, Long, Lat FROM Users Where NeighborhoodName='" + neiName + "' AND (FirstName LIKE '%" + userName + "%' OR LastName LIKE '%" + userName + "%');";
+                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, YearOfBirth, AboutMe, Long, Lat FROM Users Where NeighborhoodName='" + neiName + "' AND (FirstName LIKE '%" + userName + "%' OR LastName LIKE '%" + userName + "%');";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -703,6 +705,7 @@ namespace WebApplication1.Models.DAL
                     user.FirstName = (string)dr["FirstName"];
                     user.LastName = (string)dr["LastName"];
                     user.Gender = Convert.ToInt32(dr["Gender"]);
+                    user.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
                     if (dr["AboutMe"].GetType() != typeof(DBNull))
                     {
                         user.AboutMe = (string)dr["AboutMe"];
@@ -807,12 +810,14 @@ namespace WebApplication1.Models.DAL
                     user.FirstName = (string)dr["FirstName"];
                     user.LastName = (string)dr["LastName"];
                     user.Gender = Convert.ToInt32(dr["Gender"]);
+                    user.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
                     if (dr["AboutMe"].GetType() != typeof(DBNull))
                     {
                         user.AboutMe = (string)dr["AboutMe"];
                     }
                     user.Lan = Convert.ToDouble(dr["Long"]);
                     user.Lat = Convert.ToDouble(dr["Lat"]);
+                    user.MatchRate =  Math.Round(Convert.ToDouble(dr["FinalScore"])*100,1);
 
 
                     usersMatchList.Add(user);
