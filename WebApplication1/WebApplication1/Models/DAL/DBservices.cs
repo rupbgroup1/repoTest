@@ -850,7 +850,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT Users.UserCode, FirstName, LastName, Gender, AboutMe, Lat,Long FROM Users LEFT JOIN UsersAndIntrests  ON Users.UserCode = UsersAndIntrests.UserCode Where NeighborhoodName='" + neiName + "' AND IntrestId=" + userIntrest;
+                String selectSTR = "SELECT Users.UserCode, FirstName, LastName, Gender, YearOfBirth, AboutMe, Lat,Long FROM Users LEFT JOIN UsersAndIntrests  ON Users.UserCode = UsersAndIntrests.UserCode Where NeighborhoodName='" + neiName + "' AND IntrestId=" + userIntrest;
 
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
@@ -865,6 +865,7 @@ namespace WebApplication1.Models.DAL
                     user.FirstName = (string)dr["FirstName"];
                     user.LastName = (string)dr["LastName"];
                     user.Gender = Convert.ToInt32(dr["Gender"]);
+                    user.YearOfBirth= Convert.ToInt32(dr["YearOfBirth"]);
                     if (dr["AboutMe"].GetType() != typeof(DBNull))
                     {
                         user.AboutMe = (string)dr["AboutMe"];
