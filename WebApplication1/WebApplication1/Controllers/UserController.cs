@@ -53,6 +53,13 @@ namespace WebApplication1.Controllers
             return uPass.updatePassword(value);
         }
 
+        [HttpPut]
+        [Route("api/User/Put")]
+        public int PutUser([FromBody]User value)
+        {
+            User user = new User();
+            return user.updateUser(value);
+        }
         // DELETE api/<controller>/5
         public void Delete(int id)
         {

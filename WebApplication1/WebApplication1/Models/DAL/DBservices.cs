@@ -361,7 +361,7 @@ namespace WebApplication1.Models.DAL
 
             }
         }
-        
+
         public int updatePassword(User user)
         {
             SqlConnection con;
@@ -378,7 +378,7 @@ namespace WebApplication1.Models.DAL
             }
 
             // String cStr = BuildInsertCommand(user);      // helper method to build the insert string
-            String cStr = "Update Users set PasswordUser='" + user.Password + "' where Email='" + user.Email+"'";
+            String cStr = "Update Users set PasswordUser='" + user.Password + "' where Email='" + user.Email + "'";
             cmd = CreateCommand(cStr, con);             // create the command
 
             try
@@ -625,6 +625,46 @@ namespace WebApplication1.Models.DAL
                 }
             }
         }
+
+        public int updateUser(User user)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            // String cStr = BuildInsertCommand(user);      // helper method to build the insert string
+            String cStr = "Update Users set FirstName='" + user.FirstName + "', LastName='" + user.LastName + "', Gender='" + user.Gender + "', YearOfBirth='" + user.YearOfBirth + "', FamilyStatus ='" + user.FamilyStatus + "', JobTitleCode=" + user.JobTitleId + ", WorkPlace='" + user.WorkPlace + "', NumberOfChildren=" + user.NumOfChildren + ",AboutMe='" + user.AboutMe + "' where UserCode=" + user.UserId;
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
         //*****************Neighboors***************************
 
         //filter neighboors by search *full* name
@@ -657,7 +697,7 @@ namespace WebApplication1.Models.DAL
                     }
                     user.Lan = Convert.ToDouble(dr["Long"]);
                     user.Lat = Convert.ToDouble(dr["Lat"]);
-                   
+
 
 
                     userByNameList.Add(user);
@@ -817,7 +857,7 @@ namespace WebApplication1.Models.DAL
                     }
                     user.Lan = Convert.ToDouble(dr["Long"]);
                     user.Lat = Convert.ToDouble(dr["Lat"]);
-                    user.MatchRate =  Math.Round(Convert.ToDouble(dr["FinalScore"])*100,1);
+                    user.MatchRate = Math.Round(Convert.ToDouble(dr["FinalScore"]) * 100, 1);
 
 
                     usersMatchList.Add(user);
@@ -865,7 +905,7 @@ namespace WebApplication1.Models.DAL
                     user.FirstName = (string)dr["FirstName"];
                     user.LastName = (string)dr["LastName"];
                     user.Gender = Convert.ToInt32(dr["Gender"]);
-                    user.YearOfBirth= Convert.ToInt32(dr["YearOfBirth"]);
+                    user.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
                     if (dr["AboutMe"].GetType() != typeof(DBNull))
                     {
                         user.AboutMe = (string)dr["AboutMe"];

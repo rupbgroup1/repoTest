@@ -95,7 +95,11 @@ namespace WebApplication1.Models
             return dbs.updatePassword(u);
         }
 
-
+        public int updateUser(User u)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.updateUser(u);
+        }
 
 
         public int UserId { get => userId; set => userId = value; }
