@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using WebApplication1.Models.DAL;
 
 namespace WebApplication1.Models
 {
@@ -9,17 +10,18 @@ namespace WebApplication1.Models
     {
         int categoryId;
         string categoryName;
-        SubCategory[] subCategories;
 
-        public Category(int categoryId, string categoryName, SubCategory[] subCategories)
-        {
-            CategoryId = categoryId;
-            CategoryName = categoryName;
-            SubCategories = subCategories;
-        }
 
         public int CategoryId { get => categoryId; set => categoryId = value; }
         public string CategoryName { get => categoryName; set => categoryName = value; }
-        public SubCategory[] SubCategories { get => subCategories; set => subCategories = value; }
+
+        public Category()
+        {
+        }
+        public List<Category> GetAllCategories()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetAllCategories();
+        }
     }
 }

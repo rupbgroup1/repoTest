@@ -42,6 +42,534 @@ namespace WebApplication1.Models.DAL
             return cmd;
         }
 
+        //*****************Category***************************************
+
+        public List<Category> GetAllCategories()
+        {
+            List<Category> categoriesList = new List<Category>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "select * from Maincategory";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Category c = new Category();
+                    c.CategoryId = Convert.ToInt32(dr["IdMainCategory"]);
+                    c.CategoryName = (string)dr["NameMainCategory"];
+
+                    categoriesList.Add(c);
+                }
+
+                return categoriesList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+
+        }
+
+
+
+        //*****************Events***************************************
+
+        //all nei's events
+        public List<Event> GetAllNeiEvents(string neiName, int userId)
+        {
+            List<Event> eventsList = new List<Event>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = " select E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, E.Gender, LocationLat, LocationLan, OpenByUserCode, Category, FirstName, LastName, U.UserCode, A.EventCode as attend from EventsTable E left join Users U on E.OpenByUserCode=U.UserCode left join (select EventCode from EventsAttendance where UserCode=" + userId + " ) A on E.EventCode=A.EventCode where E.NeighborhoodName = '" + neiName + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Event e = new Event();
+                    e.Id = Convert.ToInt32(dr["EventCode"]);
+                    e.Name = (string)dr["EventName"];
+                    e.Desc = (string)dr["EventDescription"];
+                    e.StartDate = Convert.ToString(dr["StartDate"]);
+                    e.EndDate = Convert.ToString(dr["EndDate"]);
+                    e.StartHour = Convert.ToString(dr["StartDate"]);
+                    e.EndHour = Convert.ToString(dr["EndDate"]);
+                    e.NumOfParticipants = Convert.ToInt32(dr["NumOfParticipants"]);
+                    if (dr["ImageLink"].GetType() != typeof(DBNull))
+                    {
+                        e.Image = (string)dr["ImageLink"];
+                    }
+                    e.Price = Convert.ToInt32(dr["Price"]);
+                    e.FromAge = Convert.ToInt32(dr["FromAge"]);
+                    e.ToAge = Convert.ToInt32(dr["ToAge"]);
+                    if (dr["Gender"].GetType() != typeof(DBNull))
+                    {
+                        e.Gender = Convert.ToInt32(dr["Gender"]);
+                    }
+                    if (dr["LocationLat"].GetType() != typeof(DBNull))
+                    {
+                        e.Lat = Convert.ToDouble(dr["LocationLat"]);
+                    }
+                    if (dr["LocationLan"].GetType() != typeof(DBNull))
+                    {
+                        e.Lan = Convert.ToDouble(dr["LocationLan"]);
+                    }
+                    e.CategoryId = Convert.ToInt32(dr["Category"]);
+                    User u = new User();
+                    u.UserId = Convert.ToInt32(dr["UserCode"]);
+                    u.FirstName = (string)dr["FirstName"];
+                    u.LastName = (string)dr["LastName"];
+                    e.Admin = u;
+                    if (dr["attend"].GetType() != typeof(DBNull))
+                    {
+                        e.Attend = 1;
+
+                    }
+                    eventsList.Add(e);
+                }
+
+                return eventsList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+
+        }
+
+        //events the user attends to
+        public List<Event> GetAttends(int userId)
+        {
+            List<Event> eventsList = new List<Event>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "  select E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, E.Gender, LocationLat, LocationLan, OpenByUserCode, Category, U.FirstName, U.LastName from EventsAttendance A left join EventsTable E on A.EventCode = E.EventCode left join Users U on E.OpenByUserCode=U.UserCode where A.UserCode=" + userId;
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Event e = new Event();
+                    e.Id = Convert.ToInt32(dr["EventCode"]);
+                    e.Name = (string)dr["EventName"];
+                    e.Desc = (string)dr["EventDescription"];
+                    e.StartDate = Convert.ToString(dr["StartDate"]);
+                    e.EndDate = Convert.ToString(dr["EndDate"]);
+                    e.StartHour = Convert.ToString(dr["StartDate"]);
+                    e.EndHour = Convert.ToString(dr["EndDate"]);
+                    e.NumOfParticipants = Convert.ToInt32(dr["NumOfParticipants"]);
+                    if (dr["ImageLink"].GetType() != typeof(DBNull))
+                    {
+                        e.Image = (string)dr["ImageLink"];
+                    }
+                    e.Price = Convert.ToInt32(dr["Price"]);
+                    e.FromAge = Convert.ToInt32(dr["FromAge"]);
+                    e.ToAge = Convert.ToInt32(dr["ToAge"]);
+                    if (dr["Gender"].GetType() != typeof(DBNull))
+                    {
+                        e.Gender = Convert.ToInt32(dr["Gender"]);
+                    }
+                    if (dr["LocationLat"].GetType() != typeof(DBNull))
+                    {
+                        e.Lat = Convert.ToDouble(dr["LocationLat"]);
+                    }
+                    if (dr["LocationLan"].GetType() != typeof(DBNull))
+                    {
+                        e.Lan = Convert.ToDouble(dr["LocationLan"]);
+                    }
+                    e.Price = Convert.ToInt32(dr["Price"]);
+                    e.FromAge = Convert.ToInt32(dr["FromAge"]);
+                    e.ToAge = Convert.ToInt32(dr["ToAge"]);
+                    e.CategoryId = Convert.ToInt32(dr["Category"]);
+                    User u = new User();
+                    u.FirstName = (string)dr["FirstName"];
+                    u.LastName = (string)dr["LastName"];
+                    e.Admin = u;
+                    eventsList.Add(e);
+                }
+
+                return eventsList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+
+        }
+
+        //events the user created
+        public List<Event> GetMyEvents(int userId)
+        {
+            List<Event> eventsList = new List<Event>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "select EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, Gender, LocationLat, LocationLan, OpenByUserCode, Category from EventsTable where OpenByUserCode=" + userId;
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Event e = new Event();
+                    e.Id = Convert.ToInt32(dr["EventCode"]);
+                    e.Name = (string)dr["EventName"];
+                    e.Desc = (string)dr["EventDescription"];
+                    e.StartDate = Convert.ToString(dr["StartDate"]);
+                    e.EndDate = Convert.ToString(dr["EndDate"]);
+                    e.StartHour = Convert.ToString(dr["StartDate"]);
+                    e.EndHour = Convert.ToString(dr["EndDate"]);
+                    e.NumOfParticipants = Convert.ToInt32(dr["NumOfParticipants"]);
+                    if (dr["ImageLink"].GetType() != typeof(DBNull))
+                    {
+                        e.Image = (string)dr["ImageLink"];
+                    }
+                    e.Price = Convert.ToInt32(dr["Price"]);
+                    e.FromAge = Convert.ToInt32(dr["FromAge"]);
+                    e.ToAge = Convert.ToInt32(dr["ToAge"]);
+                    if (dr["Gender"].GetType() != typeof(DBNull))
+                    {
+                        e.Gender = Convert.ToInt32(dr["Gender"]);
+                    }
+                    if (dr["LocationLat"].GetType() != typeof(DBNull))
+                    {
+                        e.Lat = Convert.ToDouble(dr["LocationLat"]);
+                    }
+                    if (dr["LocationLan"].GetType() != typeof(DBNull))
+                    {
+                        e.Lan = Convert.ToDouble(dr["LocationLan"]);
+                    }
+                    e.CategoryId = Convert.ToInt32(dr["Category"]);
+
+                    eventsList.Add(e);
+                }
+
+                return eventsList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+
+        }
+
+
+        //add new event attend command
+        private String BuildEventAttInsertCommand(int eventId, int userId)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+            // use a string builder to create the dynamic string
+            sb.AppendFormat("Values('{0}', '{1}')", eventId, userId);
+            String prefix = "INSERT INTO EventsAttendance" + "(EventCode, UserCode)";
+            command = prefix + sb.ToString();
+            return command;
+        }
+
+        //post new event attendance
+        public int PostEventAtt(int eventId, int userId)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildEventAttInsertCommand(eventId, userId);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        //create new event command
+        private String BuildEventInsertCommand(Event e)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+            string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
+            string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
+            // use a string builder to create the dynamic string
+            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}')", e.Name, e.Desc, startDate, endDate, e.NumOfParticipants, e.Image, e.Price, e.OpenedBy, e.FromAge, e.ToAge, e.NeiCode, e.CategoryId);
+            String prefix = "INSERT INTO EventsTable" + "(EventName, EventDescription, StartDate , EndDate, NumOfParticipants, ImageLink , Price, OpenByUserCode, FromAge, ToAge, NeighborhoodName, Category )";
+            command = prefix + sb.ToString();
+            return command;
+        }
+
+        //post new event 
+        public int PostNewEvent(Event e)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildEventInsertCommand(e);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                    postEventInterests(e);
+                }
+            }
+        }
+
+
+        public int postEventInterests(Event e)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            //build insert query
+            string values = "";
+            for (int i = 0; i < e.Intrests.Length; i++)
+            {
+                if (i != 0)
+                    values += ",";
+                values += "(" + e.Id + "," + e.Intrests[i].Id + ")";
+            }
+            // String cStr = BuildInsertCommand(user);      // helper method to build the insert string
+            String cStr = "insert into EventsAndInterests (EventCode, InterestId) values " + values;
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+            }
+        }
+
+        //cancel event attendance
+        public int CancelEventAtt(int eventId, int userId)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = "Delete from EventsAttendance where EventCode=" + eventId + " and UserCode=" + userId;   // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+        
+        //update event - command
+        private String BuildEventUpdateCommand(Event e)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+            string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
+            string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
+            // use a string builder to create the dynamic string
+            command = "update EventsTable set EventName='" + e.Name + "', EventDescription='" + e.Desc + "', StartDate='" + startDate + "', EndDate='" + endDate + "', NumOfParticipants=" + e.NumOfParticipants + ", ImageLink='" + e.Image +"', Price=" + e.Price + ", FromAge=" + e.FromAge + ", ToAge=" + e.ToAge + ", Category=" + e.CategoryId +"where EventCode=" + e.Id;
+            return command;
+        }
+
+        //update event
+        public int UpdateEvent(Event e)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildEventUpdateCommand(e);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+
         //*****************User***************************************
 
         //add new user command

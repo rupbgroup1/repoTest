@@ -54,12 +54,13 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPut]
-        [Route("api/User/Put")]
+        [Route("api/User/Update")]
         public int PutUser([FromBody]User value)
         {
             User user = new User();
             return user.updateUser(value);
         }
+
         // DELETE api/<controller>/5
         public void Delete(int id)
         {

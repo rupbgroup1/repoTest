@@ -11,31 +11,99 @@
     <script>
 
         $(document).ready(function () {
-          // getCIty();
+            // getCIty();
             //postNewUser();
-          // getUser();
-          // getUserByI();
+            //getUser();
+            //getUserByI();
             //getInterests();
             //GETI();
-          //  put();
-            getMatch();
-           // getParam();
-           //putParam();
-           // updateUserVotes();
+            //  put();
+            // getMatch();
+            // getParam();
+            //putParam();
+            // updateUserVotes();
             //startTimer();
             //putPass();
+            //getEvents();
+            //getAtt();
+            // getCat();
+            //DeleteEventAtt();
+            putEvent();
+
         });
+
+        function postEvent() {
+           let event = {
+                "CategoryId": 2,
+                    "Desc": "טירוף",
+                                "FromAge": "2",
+                                    "Intrests": [],
+                                        "Name": "מסיבה ",
+                                            "NumOfParticipants": "100",
+                                                "Price": "100",
+                                                    "StartDate": "2020-05-25T09:33:46.038Z",
+               "StartHour": "2020-05-21T15:33:49.121Z",
+               "EndDate": "2020-05-25T09:33:46.038Z",
+               "EndHour": "2020-05-21T15:33:49.121Z",
+               "ToAge": "10",
+               "OpenedBy": 1,
+               "NeiCode":'תל מונד'
+
+}
+            ajaxCall("POST", "../api/Events/New", JSON.stringify(event), succ2, err2);
+        }
+
+        function putEvent() {
+            let event = {
+                "Id":9,
+                "CategoryId": 2,
+                "Desc": "טירוף בתל מונד",
+                "FromAge": "2",
+                "Intrests": [],
+                "Name": "מסיבושי",
+                "NumOfParticipants": "100",
+                "Price": "100",
+                "StartDate": "2020-05-25T09:33:46.038Z",
+                "StartHour": "2020-05-21T15:33:49.121Z",
+                "EndDate": "2020-05-25T09:33:46.038Z",
+                "EndHour": "2020-05-21T15:33:49.121Z",
+                "ToAge": "10",
+                "OpenedBy": 1,
+                "NeiCode": 'תל מונד'
+
+            }
+            ajaxCall("PUT", "../api/Events/Update", JSON.stringify(event), succ2, err2);
+        }
+
+        function DeleteEventAtt() {
+            let att = {
+                Id: 1,
+                Attandance: [{ UserId: 61 }]
+            }
+            ajaxCall("DELETE", "../api/Events/DeleteAtt", JSON.stringify(att), succ2, err2);
+        }
+
+        function getCat() {
+
+            ajaxCall("GET", "../api/Category/All", "", succ3, err3);
+        }
+
+        function getEvents() {
+
+            ajaxCall("GET", "../api/Events/All/1/תל מונד", "", succ3, err3);
+        }
 
         //change to start!!!
         function startTimer() {
             ajaxCall("GET", "../api/Timer/start", "", succ2, err2);
-        } 
+        }
+
         function updateUserVotes() {
             ajaxCall("PUT", "../api/Votes/Update", "", succ2, err2);
         }
 
         function getUserByI() {
-            
+
             ajaxCall("GET", "../api/Neighboors/Intrest/תל מונד/34", "", succ3, err3);
         }
         function getParam() {
@@ -45,7 +113,7 @@
         function getUser() {
             searchKeys = {
                 Email: "test@gmail.com",
-                Password: "123456"
+                Password: "111111"
             }
             ajaxCall("POST", "../api/User/login", JSON.stringify(searchKeys), succ2, err2);
         }
@@ -86,7 +154,7 @@
         function getInterests() {
             ajaxCall("GET", "../api/Intrests", "", succ2, err2);
         }
-        
+
         function GETI() {
             ajaxCall("GET", "../api/Intrests/Sub?mainI=ספורט", "", succ2, err2);
         }
@@ -97,10 +165,10 @@
         function err3(data) {
             console.log(data);
         }
-        function getCIty(){
+        function getCIty() {
             ajaxCall("GET", "../api/City", "", succ2, err2);
         }
-   
+
         function succ2(data) {
             console.log(data);
         }
@@ -110,20 +178,20 @@
         function postNewUser() {
             let newUser = {
                 "CityName": "test",
-                    "Email": "Bgroup21@test.com",
-                        "FirstName": "גק",
-                            "Gender": 2,
-                                  "ImagePath": "https://cdn1.iconfinder.com/data/icons/business-users/512/circle-512.png",
-                                    "Lan": 34.919683523476124,
-                                        "LastName": "שפרד",
-                                            "Lat": 32.257277338516821,
-                                                "NeighborhoodName": "test",
-                                                    "Password": "123456",
-                                                        "YearOfBirth": "1981",
+                "Email": "Bgroup21@test.com",
+                "FirstName": "גק",
+                "Gender": 2,
+                "ImagePath": "https://cdn1.iconfinder.com/data/icons/business-users/512/circle-512.png",
+                "Lan": 34.919683523476124,
+                "LastName": "שפרד",
+                "Lat": 32.257277338516821,
+                "NeighborhoodName": "test",
+                "Password": "123456",
+                "YearOfBirth": "1981",
 
             }
             ajaxCall("POST", "../api/User", JSON.stringify(newUser), successPost, errorPost);
-         }
+        }
         function successPost(data) {
             console.log(data);
         }
