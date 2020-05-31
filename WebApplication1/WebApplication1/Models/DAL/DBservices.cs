@@ -585,7 +585,7 @@ namespace WebApplication1.Models.DAL
         //*****************Service***************************************
 
         //all nei's events
-        public List<Service> GetAllNeiServices(string neiName, int userId)
+        public List<Service> GetAllNeiServices(string neiName)
         {
             List<Service> sList = new List<Service>();
             SqlConnection con = null;
@@ -594,7 +594,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "select * from ServiceTable where Neighboorhood='" + neiName + "'";
+                String selectSTR = "select * from ServicesTable where Neighboorhood='" + neiName+"'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -636,7 +636,7 @@ namespace WebApplication1.Models.DAL
                     {
                         s.OpenHoursEnds = Convert.ToString(dr["OpenHoursEnds"]);
                     }
-                    s.Categories = Convert.ToInt32(dr["Category"]);
+                    s.Categories = Convert.ToInt32(dr["Categories"]);
                     s.NeighborhoodId = (string)dr["Neighboorhood"];
                     sList.Add(s);
                 }
@@ -669,7 +669,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "select * from ServiceTable where OwnerId=" + userId;
+                String selectSTR = "select * from ServicesTable where OwnerId=" + userId;
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -711,7 +711,7 @@ namespace WebApplication1.Models.DAL
                     {
                         s.OpenHoursEnds = Convert.ToString(dr["OpenHoursEnds"]);
                     }
-                    s.Categories = Convert.ToInt32(dr["Category"]);
+                    s.Categories = Convert.ToInt32(dr["Categories"]);
                     s.NeighborhoodId = (string)dr["Neighboorhood"];
                     sList.Add(s);
                 }
@@ -740,11 +740,11 @@ namespace WebApplication1.Models.DAL
         {
             String command;
             StringBuilder sb = new StringBuilder();
-            string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
-            string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
+            //string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
+            //string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
             // use a string builder to create the dynamic string
-            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}')", e.Name, e.Desc, startDate, endDate, e.NumOfParticipants, e.Image, e.Price, e.OpenedBy, e.FromAge, e.ToAge, e.NeiCode, e.CategoryId, e.Location, e.Lat, e.Lan);
-            String prefix = "INSERT INTO EventsTable" + "(EventName, EventDescription, StartDate , EndDate, NumOfParticipants, ImageLink , Price, OpenByUserCode, FromAge, ToAge, NeighborhoodName, Category, Location, LocationLat, LocationLan )";
+            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}')", s.ServiceName, s.ImageGallery, s.Rate, s.Description, s.ServiceAddress, s.Lat, s.Lan, s.Owner, s.OpenDays, s.OpenHoursStart, s.OpenHoursEnds, s.Categories, s.NeighborhoodId);
+            String prefix = "INSERT INTO ServicesTable" + "(ServiceName, ImagePrimary, Rate , ServiceDescription, ServiceAddress, Lat , Lan, OwnerId, OpenDays, OpenHoursStart, OpenHoursEnds, Categories, Neighboorhood)";
             command = prefix + sb.ToString();
             return command;
         }
@@ -765,7 +765,7 @@ namespace WebApplication1.Models.DAL
                 throw (ex);
             }
 
-            String cStr = BuildEventInsertCommand(s);      // helper method to build the insert string
+            String cStr = BuildServiceInsertCommand(s);      // helper method to build the insert string
 
             cmd = CreateCommand(cStr, con);             // create the command
 
@@ -798,10 +798,10 @@ namespace WebApplication1.Models.DAL
         {
             String command;
             StringBuilder sb = new StringBuilder();
-            string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
-            string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
+            //string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
+            //string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
             // use a string builder to create the dynamic string
-            command = "update EventsTable set EventName='" + e.Name + "', EventDescription='" + e.Desc + "', StartDate='" + startDate + "', EndDate='" + endDate + "', NumOfParticipants=" + e.NumOfParticipants + ", ImageLink='" + e.Image + "', Price=" + e.Price + ", FromAge=" + e.FromAge + ", ToAge=" + e.ToAge + ", Category=" + e.CategoryId + ", Location='" + e.Location + "', LocationLat=" + e.Lat + ", LocationLan= " + e.Lan + " Where EventCode=" + e.Id;
+            command = "update ServicesTable set ServiceName='" + s.ServiceName + "', ImagePrimary='" + s.ImageGallery + "', Rate='" + s.Rate + "', ServiceDescription='" + s.Description + "', ServiceAddress=" + s.ServiceAddress + ", Lat='" + s.Lat + "', Lan=" + s.Lan + ", OwnerId=" +s.Owner + ", OpenDays=" + s.OpenDays + ", OpenHoursStart=" + s.OpenHoursStart + ", OpenHoursEnds='" +s.OpenHoursEnds + "', Categories=" + s.Categories + ", Neighboorhood= " + s.NeighborhoodId + " Where ServiceId=" + s.ServiceId;
             return command;
         }
 
@@ -821,7 +821,7 @@ namespace WebApplication1.Models.DAL
                 throw (ex);
             }
 
-            String cStr = BuildEventUpdateCommand(s);      // helper method to build the insert string
+            String cStr = BuildServiceUpdateCommand(s);      // helper method to build the insert string
 
             cmd = CreateCommand(cStr, con);             // create the command
 

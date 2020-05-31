@@ -197,6 +197,8 @@
     <Compile Include="Controllers\Neighboorhoods.cs" />
     <Compile Include="Controllers\NeighboorsController.cs" />
     <Compile Include="Controllers\ParamController.cs" />
+    <Compile Include="Controllers\PushController.cs" />
+    <Compile Include="Controllers\ServicesController.cs" />
     <Compile Include="Controllers\TimerController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VotesController.cs" />
@@ -287,6 +289,7 @@
     <None Include="Properties\PublishProfiles\FolderProfile31.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile32.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile33.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile34.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile4.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile5.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile6.pubxml" />

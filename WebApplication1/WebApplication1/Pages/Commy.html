@@ -28,8 +28,9 @@
             //getAtt();
             // getCat();
             //DeleteEventAtt();
-            putEvent();
+            //putEvent();
             //postEvent();
+            getService();
 
         });
 
@@ -86,6 +87,11 @@
                 Attandance: [{ UserId: 61 }]
             }
             ajaxCall("DELETE", "../api/Events/DeleteAtt", JSON.stringify(att), succ2, err2);
+        }
+        
+        function getService() {
+
+            ajaxCall("GET", "../api/Services/My?userId=1", "", succ3, err3);
         }
 
         function getCat() {

@@ -44,10 +44,10 @@ namespace WebApplication1.Models
         public double Lan { get => lan; set => lan = value; }
         public string NeighborhoodId { get => neighborhoodId; set => neighborhoodId = value; }
 
-        public List<Service> GetAllNeiServices(string neiName, int userId)
+        public List<Service> GetAllNeiServices(string neiName)
         {
             DBservices dbs = new DBservices();
-            return dbs.GetAllNeiServices(neiName, userId);
+            return dbs.GetAllNeiServices(neiName);
         }
 
         

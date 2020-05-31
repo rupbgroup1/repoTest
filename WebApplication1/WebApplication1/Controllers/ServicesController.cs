@@ -14,11 +14,11 @@ namespace WebApplication1.Controllers
 
         //all Services
         [HttpGet]
-        [Route("api/Services/All/{userId}/{neiName}")]
-        public List<Service> GetAllNeiServices(int userId, string neiName)
+        [Route("api/Services/All")]
+        public List<Service> GetAllNeiServices(string neiName)
         {
             Service s = new Service();
-            return s.GetAllNeiServices(neiName, userId);
+            return s.GetAllNeiServices(neiName);
         }
         
         //events the user created
