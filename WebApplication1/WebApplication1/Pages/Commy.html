@@ -29,38 +29,16 @@
             // getCat();
             //DeleteEventAtt();
             putEvent();
+            //postEvent();
 
         });
 
         function postEvent() {
-           let event = {
-                "CategoryId": 2,
-                    "Desc": "טירוף",
-                                "FromAge": "2",
-                                    "Intrests": [],
-                                        "Name": "מסיבה ",
-                                            "NumOfParticipants": "100",
-                                                "Price": "100",
-                                                    "StartDate": "2020-05-25T09:33:46.038Z",
-               "StartHour": "2020-05-21T15:33:49.121Z",
-               "EndDate": "2020-05-25T09:33:46.038Z",
-               "EndHour": "2020-05-21T15:33:49.121Z",
-               "ToAge": "10",
-               "OpenedBy": 1,
-               "NeiCode":'תל מונד'
-
-}
-            ajaxCall("POST", "../api/Events/New", JSON.stringify(event), succ2, err2);
-        }
-
-        function putEvent() {
             let event = {
-                "Id":9,
                 "CategoryId": 2,
-                "Desc": "טירוף בתל מונד",
+                "Desc": "טירוף",
                 "FromAge": "2",
-                "Intrests": [],
-                "Name": "מסיבושי",
+                "Name": "מסיבה ",
                 "NumOfParticipants": "100",
                 "Price": "100",
                 "StartDate": "2020-05-25T09:33:46.038Z",
@@ -69,8 +47,35 @@
                 "EndHour": "2020-05-21T15:33:49.121Z",
                 "ToAge": "10",
                 "OpenedBy": 1,
-                "NeiCode": 'תל מונד'
+                "NeiCode": 'תל מונד', 
+                "Lat": 32.25805,
+                "Lan": 34.923285,
+                "Location": "מתנס כפר הס"
 
+            }
+            ajaxCall("POST", "../api/Events/New", JSON.stringify(event), succ2, err2);
+        }
+
+        function putEvent() {
+            let event = {
+                "CategoryId": 1,
+                "Desc": "תחממו גרונות כי הולך להיות ערב מטורףףף, הירשמו ובחרו שירים מראש",
+                "EndDate": "2020-04-16T12:00:00",
+                "EndHour": "2020-04-16T12:00:00",
+                "FromAge": 18,
+                "Id": 1,
+                "Image": "https://media.gettyimages.com/photos/colorful-powder-explosion-in-all-directions-in-a-nice-composition-picture-id890147976?s=612x612",
+                "Lan": 34.92055842652917,
+                "Lat": 32.25394820202541,
+                "Location": "הדקל 64, תל מונד, ישראל",
+                "Name": "ערב קריוקי",
+                "NeiCode": "תל מונד",
+                "NumOfParticipants": 500,
+                "OpenedBy": 1,
+                "Price": 60,
+                "StartDate": "2020-04-16T12:00:00",
+                "StartHour": "2020-04-16T12:00:00",
+                "ToAge": 25,
             }
             ajaxCall("PUT", "../api/Events/Update", JSON.stringify(event), succ2, err2);
         }

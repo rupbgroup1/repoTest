@@ -100,7 +100,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = " select E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, E.Gender, LocationLat, LocationLan, OpenByUserCode, Category, FirstName, LastName, U.UserCode, A.EventCode as attend from EventsTable E left join Users U on E.OpenByUserCode=U.UserCode left join (select EventCode from EventsAttendance where UserCode=" + userId + " ) A on E.EventCode=A.EventCode where E.NeighborhoodName = '" + neiName + "'";
+                String selectSTR = " select E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, E.Gender, LocationLat, LocationLan, Location, OpenByUserCode, Category, FirstName, LastName, U.UserCode, A.EventCode as attend from EventsTable E left join Users U on E.OpenByUserCode=U.UserCode left join (select EventCode from EventsAttendance where UserCode=" + userId + " ) A on E.EventCode=A.EventCode where E.NeighborhoodName = '" + neiName + "' and E.EndDate >= GETDATE() Order by E.StartDate";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -135,6 +135,10 @@ namespace WebApplication1.Models.DAL
                     if (dr["LocationLan"].GetType() != typeof(DBNull))
                     {
                         e.Lan = Convert.ToDouble(dr["LocationLan"]);
+                    }
+                    if (dr["Location"].GetType() != typeof(DBNull))
+                    {
+                        e.Location = (string)dr["Location"];
                     }
                     e.CategoryId = Convert.ToInt32(dr["Category"]);
                     User u = new User();
@@ -178,7 +182,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "  select E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, E.Gender, LocationLat, LocationLan, OpenByUserCode, Category, U.FirstName, U.LastName from EventsAttendance A left join EventsTable E on A.EventCode = E.EventCode left join Users U on E.OpenByUserCode=U.UserCode where A.UserCode=" + userId;
+                String selectSTR = "  select E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, E.Gender, LocationLat, LocationLan, Location, OpenByUserCode, Category, U.FirstName, U.LastName from EventsAttendance A left join EventsTable E on A.EventCode = E.EventCode left join Users U on E.OpenByUserCode=U.UserCode where A.UserCode=" + userId;
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -213,6 +217,10 @@ namespace WebApplication1.Models.DAL
                     if (dr["LocationLan"].GetType() != typeof(DBNull))
                     {
                         e.Lan = Convert.ToDouble(dr["LocationLan"]);
+                    }
+                    if (dr["Location"].GetType() != typeof(DBNull))
+                    {
+                        e.Location = (string)dr["Location"];
                     }
                     e.Price = Convert.ToInt32(dr["Price"]);
                     e.FromAge = Convert.ToInt32(dr["FromAge"]);
@@ -253,7 +261,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "select EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, Gender, LocationLat, LocationLan, OpenByUserCode, Category from EventsTable where OpenByUserCode=" + userId;
+                String selectSTR = "select EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, Gender, LocationLat, LocationLan, Location, OpenByUserCode, Category from EventsTable where OpenByUserCode=" + userId + " Order by StartDate Desc";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -288,6 +296,10 @@ namespace WebApplication1.Models.DAL
                     if (dr["LocationLan"].GetType() != typeof(DBNull))
                     {
                         e.Lan = Convert.ToDouble(dr["LocationLan"]);
+                    }
+                    if (dr["Location"].GetType() != typeof(DBNull))
+                    {
+                        e.Location = (string)dr["Location"];
                     }
                     e.CategoryId = Convert.ToInt32(dr["Category"]);
 
@@ -375,8 +387,8 @@ namespace WebApplication1.Models.DAL
             string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
             string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
             // use a string builder to create the dynamic string
-            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}')", e.Name, e.Desc, startDate, endDate, e.NumOfParticipants, e.Image, e.Price, e.OpenedBy, e.FromAge, e.ToAge, e.NeiCode, e.CategoryId);
-            String prefix = "INSERT INTO EventsTable" + "(EventName, EventDescription, StartDate , EndDate, NumOfParticipants, ImageLink , Price, OpenByUserCode, FromAge, ToAge, NeighborhoodName, Category )";
+            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}')", e.Name, e.Desc, startDate, endDate, e.NumOfParticipants, e.Image, e.Price, e.OpenedBy, e.FromAge, e.ToAge, e.NeiCode, e.CategoryId, e.Location, e.Lat, e.Lan);
+            String prefix = "INSERT INTO EventsTable" + "(EventName, EventDescription, StartDate , EndDate, NumOfParticipants, ImageLink , Price, OpenByUserCode, FromAge, ToAge, NeighborhoodName, Category, Location, LocationLat, LocationLan )";
             command = prefix + sb.ToString();
             return command;
         }
@@ -419,7 +431,8 @@ namespace WebApplication1.Models.DAL
                 {
                     // close the db connection
                     con.Close();
-                    postEventInterests(e);
+                    if (e.Intrests.Length > 0)
+                        postEventInterests(e);
                 }
             }
         }
@@ -445,7 +458,7 @@ namespace WebApplication1.Models.DAL
             {
                 if (i != 0)
                     values += ",";
-                values += "(" + e.Id + "," + e.Intrests[i].Id + ")";
+                values += "((select top 1 EventCode from EventsTable order by EventCode desc)," + e.Intrests[i].Id + ")";
             }
             // String cStr = BuildInsertCommand(user);      // helper method to build the insert string
             String cStr = "insert into EventsAndInterests (EventCode, InterestId) values " + values;
@@ -514,7 +527,7 @@ namespace WebApplication1.Models.DAL
                 }
             }
         }
-        
+
         //update event - command
         private String BuildEventUpdateCommand(Event e)
         {
@@ -523,7 +536,7 @@ namespace WebApplication1.Models.DAL
             string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
             string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
             // use a string builder to create the dynamic string
-            command = "update EventsTable set EventName='" + e.Name + "', EventDescription='" + e.Desc + "', StartDate='" + startDate + "', EndDate='" + endDate + "', NumOfParticipants=" + e.NumOfParticipants + ", ImageLink='" + e.Image +"', Price=" + e.Price + ", FromAge=" + e.FromAge + ", ToAge=" + e.ToAge + ", Category=" + e.CategoryId +"where EventCode=" + e.Id;
+            command = "update EventsTable set EventName='" + e.Name + "', EventDescription='" + e.Desc + "', StartDate='" + startDate + "', EndDate='" + endDate + "', NumOfParticipants=" + e.NumOfParticipants + ", ImageLink='" + e.Image + "', Price=" + e.Price + ", FromAge=" + e.FromAge + ", ToAge=" + e.ToAge + ", Category=" + e.CategoryId + ", Location='" + e.Location + "', LocationLat=" + e.Lat + ", LocationLan= " + e.Lan + " Where EventCode=" + e.Id;
             return command;
         }
 
@@ -544,6 +557,271 @@ namespace WebApplication1.Models.DAL
             }
 
             String cStr = BuildEventUpdateCommand(e);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        //*****************Service***************************************
+
+        //all nei's events
+        public List<Service> GetAllNeiServices(string neiName, int userId)
+        {
+            List<Service> sList = new List<Service>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "select * from ServiceTable where Neighboorhood='" + neiName + "'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Service s = new Service();
+                    s.ServiceId = Convert.ToInt32(dr["ServiceId"]);
+                    s.ServiceName = (string)dr["ServiceName"];
+                    if (dr["ImagePrimary"].GetType() != typeof(DBNull))
+                    {
+                        s.ImageGallery = (string)dr["ImagePrimary"];
+                    }
+                    s.Rate = Convert.ToInt32(dr["Rate"]);
+                    s.Description = (string)dr["ServiceDescription"];
+                    if (dr["ServiceAddress"].GetType() != typeof(DBNull))
+                    {
+                        s.ServiceAddress = (string)dr["ServiceAddress"];
+                    }
+                    if (dr["Lan"].GetType() != typeof(DBNull))
+                    {
+                        s.Lan = Convert.ToDouble(dr["Lan"]);
+                    }
+                    if (dr["Lat"].GetType() != typeof(DBNull))
+                    {
+                        s.Lat = Convert.ToDouble(dr["Lat"]);
+                    }
+                    s.Owner = Convert.ToInt32(dr["OwnerId"]);
+                    if (dr["OpenDays"].GetType() != typeof(DBNull))
+                    {
+                        s.OpenDays = (string)dr["OpenDays"];
+                    }
+                    if (dr["OpenHoursStart"].GetType() != typeof(DBNull))
+                    {
+                        s.OpenHoursStart = Convert.ToString(dr["OpenHoursStart"]);
+                    }
+                    if (dr["OpenHoursEnds"].GetType() != typeof(DBNull))
+                    {
+                        s.OpenHoursEnds = Convert.ToString(dr["OpenHoursEnds"]);
+                    }
+                    s.Categories = Convert.ToInt32(dr["Category"]);
+                    s.NeighborhoodId = (string)dr["Neighboorhood"];
+                    sList.Add(s);
+                }
+
+                return sList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+
+        }
+
+        //services the user created
+        public List<Service> GetMyServices(int userId)
+        {
+            List<Service> sList = new List<Service>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "select * from ServiceTable where OwnerId=" + userId;
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Service s = new Service();
+                    s.ServiceId = Convert.ToInt32(dr["ServiceId"]);
+                    s.ServiceName = (string)dr["ServiceName"];
+                    if (dr["ImagePrimary"].GetType() != typeof(DBNull))
+                    {
+                        s.ImageGallery = (string)dr["ImagePrimary"];
+                    }
+                    s.Rate = Convert.ToInt32(dr["Rate"]);
+                    s.Description = (string)dr["ServiceDescription"];
+                    if (dr["ServiceAddress"].GetType() != typeof(DBNull))
+                    {
+                        s.ServiceAddress = (string)dr["ServiceAddress"];
+                    }
+                    if (dr["Lan"].GetType() != typeof(DBNull))
+                    {
+                        s.Lan = Convert.ToDouble(dr["Lan"]);
+                    }
+                    if (dr["Lat"].GetType() != typeof(DBNull))
+                    {
+                        s.Lat = Convert.ToDouble(dr["Lat"]);
+                    }
+                    s.Owner = Convert.ToInt32(dr["OwnerId"]);
+                    if (dr["OpenDays"].GetType() != typeof(DBNull))
+                    {
+                        s.OpenDays = (string)dr["OpenDays"];
+                    }
+                    if (dr["OpenHoursStart"].GetType() != typeof(DBNull))
+                    {
+                        s.OpenHoursStart = Convert.ToString(dr["OpenHoursStart"]);
+                    }
+                    if (dr["OpenHoursEnds"].GetType() != typeof(DBNull))
+                    {
+                        s.OpenHoursEnds = Convert.ToString(dr["OpenHoursEnds"]);
+                    }
+                    s.Categories = Convert.ToInt32(dr["Category"]);
+                    s.NeighborhoodId = (string)dr["Neighboorhood"];
+                    sList.Add(s);
+                }
+
+                return sList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+
+        }
+
+
+        //create new service command
+        private String BuildServiceInsertCommand(Service s)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+            string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
+            string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
+            // use a string builder to create the dynamic string
+            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}', '{13}', '{14}')", e.Name, e.Desc, startDate, endDate, e.NumOfParticipants, e.Image, e.Price, e.OpenedBy, e.FromAge, e.ToAge, e.NeiCode, e.CategoryId, e.Location, e.Lat, e.Lan);
+            String prefix = "INSERT INTO EventsTable" + "(EventName, EventDescription, StartDate , EndDate, NumOfParticipants, ImageLink , Price, OpenByUserCode, FromAge, ToAge, NeighborhoodName, Category, Location, LocationLat, LocationLan )";
+            command = prefix + sb.ToString();
+            return command;
+        }
+
+        //post new event 
+        public int PostNewService(Service s)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildEventInsertCommand(s);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+
+
+        //update service - command
+        private String BuildServiceUpdateCommand(Service s)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+            string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
+            string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
+            // use a string builder to create the dynamic string
+            command = "update EventsTable set EventName='" + e.Name + "', EventDescription='" + e.Desc + "', StartDate='" + startDate + "', EndDate='" + endDate + "', NumOfParticipants=" + e.NumOfParticipants + ", ImageLink='" + e.Image + "', Price=" + e.Price + ", FromAge=" + e.FromAge + ", ToAge=" + e.ToAge + ", Category=" + e.CategoryId + ", Location='" + e.Location + "', LocationLat=" + e.Lat + ", LocationLan= " + e.Lan + " Where EventCode=" + e.Id;
+            return command;
+        }
+
+        //update event
+        public int UpdateService(Service s)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildEventUpdateCommand(s);      // helper method to build the insert string
 
             cmd = CreateCommand(cStr, con);             // create the command
 
