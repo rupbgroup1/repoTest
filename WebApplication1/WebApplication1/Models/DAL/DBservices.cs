@@ -182,7 +182,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "  select E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, E.Gender, LocationLat, LocationLan, Location, OpenByUserCode, Category, U.FirstName, U.LastName from EventsAttendance A left join EventsTable E on A.EventCode = E.EventCode left join Users U on E.OpenByUserCode=U.UserCode where A.UserCode=" + userId;
+                String selectSTR = "  select DISTINCT E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, E.Gender, LocationLat, LocationLan, Location, OpenByUserCode, Category, U.FirstName, U.LastName from EventsAttendance A left join EventsTable E on A.EventCode = E.EventCode left join Users U on E.OpenByUserCode=U.UserCode where A.UserCode=" + userId;
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -705,11 +705,13 @@ namespace WebApplication1.Models.DAL
                     }
                     if (dr["OpenHoursStart"].GetType() != typeof(DBNull))
                     {
-                        s.OpenHoursStart = Convert.ToString(dr["OpenHoursStart"]);
+                        string ohs = Convert.ToString(dr["OpenHoursStart"]);
+                        s.OpenHoursStart = ohs.Substring(0, 5);
                     }
                     if (dr["OpenHoursEnds"].GetType() != typeof(DBNull))
                     {
-                        s.OpenHoursEnds = Convert.ToString(dr["OpenHoursEnds"]);
+                        string ohe= Convert.ToString(dr["OpenHoursEnds"]);
+                        s.OpenHoursEnds = ohe.Substring(0, 5);
                     }
                     s.Categories = Convert.ToInt32(dr["Categories"]);
                     s.NeighborhoodId = (string)dr["Neighboorhood"];
@@ -798,10 +800,8 @@ namespace WebApplication1.Models.DAL
         {
             String command;
             StringBuilder sb = new StringBuilder();
-            //string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
-            //string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
-            // use a string builder to create the dynamic string
-            command = "update ServicesTable set ServiceName='" + s.ServiceName + "', ImagePrimary='" + s.ImageGallery + "', Rate='" + s.Rate + "', ServiceDescription='" + s.Description + "', ServiceAddress=" + s.ServiceAddress + ", Lat='" + s.Lat + "', Lan=" + s.Lan + ", OwnerId=" +s.Owner + ", OpenDays=" + s.OpenDays + ", OpenHoursStart=" + s.OpenHoursStart + ", OpenHoursEnds='" +s.OpenHoursEnds + "', Categories=" + s.Categories + ", Neighboorhood= " + s.NeighborhoodId + " Where ServiceId=" + s.ServiceId;
+         
+            command = "update ServicesTable set ServiceName='" + s.ServiceName + "', ImagePrimary='" + s.ImageGallery + "', Rate=" + s.Rate + ", ServiceDescription='" + s.Description + "', ServiceAddress='" + s.ServiceAddress + "', Lat=" + s.Lat + ", Lan=" + s.Lan + ", OwnerId=" +s.Owner + ", OpenDays='" + s.OpenDays + "', OpenHoursStart='" + s.OpenHoursStart + "', OpenHoursEnds='" +s.OpenHoursEnds + "', Categories=" + s.Categories + ", Neighboorhood='" + s.NeighborhoodId + "' Where ServiceId=" + s.ServiceId;
             return command;
         }
 

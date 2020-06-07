@@ -19,7 +19,7 @@ namespace WebApplication1.Models
         int owner;
         string openDays;
         string openHoursStart;
-        String openHoursEnds;
+        string openHoursEnds;
         Event[] events;
         int categories;
         string neighborhoodId;
