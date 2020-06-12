@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using WebApplication1.Models.DAL;
 
 namespace WebApplication1.Models
 {
@@ -10,32 +11,52 @@ namespace WebApplication1.Models
         int id;
         string title;
         string description;
-        int imageId;
+        string imageId;
         string location;
-        DateTime time;
+        string foundDate;
         bool status;
-        User whoFound;
+        int whoFound;
+        string neighboorhoodName;
 
         public int Id { get => id; set => id = value; }
         public string Title { get => title; set => title = value; }
         public string Description { get => description; set => description = value; }
-        public int ImageId { get => imageId; set => imageId = value; }
+        public string ImageId { get => imageId; set => imageId = value; }
         public string Location { get => location; set => location = value; }
-        public DateTime Time { get => time; set => time = value; }
+        public string FoundDate { get => foundDate; set => foundDate = value; }
         public bool Status { get => status; set => status = value; }
-        public User WhoFound { get => whoFound; set => whoFound = value; }
+        public int WhoFound { get => whoFound; set => whoFound = value; }
+        public string NeighboorhoodName { get => neighboorhoodName; set => neighboorhoodName = value; }
 
-        public Losts(int id, string title, string description, int imageId, string location, DateTime time, bool status, User whoFound)
+        public Losts()
         {
-            Id = id;
-            Title = title;
-            Description = description;
-            ImageId = imageId;
-            Location = location;
-            Time = time;
-            Status = status;
-            WhoFound = whoFound;
         }
+
+
+        public List<Losts> GetAllLosts(string neiName)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetAllNeiLosts(neiName);
+        }
+        
+        public List<Losts> GetMyLosts(int id)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetMyLosts(id);
+        }
+
+        public int PostNewLosts(Losts l)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.PostNewLosts(l);
+        }
+
+        public int UpdateLosts(Losts l)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.UpdateLosts(l);
+        }
+
 
     }
 }

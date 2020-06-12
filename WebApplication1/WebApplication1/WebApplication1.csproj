@@ -194,18 +194,19 @@
     <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\IntrestsController.cs" />
     <Compile Include="Controllers\JobsController.cs" />
+    <Compile Include="Controllers\LostsController.cs" />
     <Compile Include="Controllers\Neighboorhoods.cs" />
     <Compile Include="Controllers\NeighboorsController.cs" />
     <Compile Include="Controllers\ParamController.cs" />
     <Compile Include="Controllers\PushController.cs" />
     <Compile Include="Controllers\ServicesController.cs" />
+    <Compile Include="Controllers\SubCategoryController.cs" />
     <Compile Include="Controllers\TimerController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Controllers\VotesController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Chat.cs" />
     <Compile Include="Models\City.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Category.cs" />
@@ -219,7 +220,6 @@
     <Compile Include="Models\MatchingCalculate.cs" />
     <Compile Include="Models\Neighborhood.cs" />
     <Compile Include="Models\Param.cs" />
-    <Compile Include="Models\Post.cs" />
     <Compile Include="Models\Service.cs" />
     <Compile Include="Models\SubCategory.cs" />
     <Compile Include="Models\User.cs" />
@@ -292,6 +292,7 @@
     <None Include="Properties\PublishProfiles\FolderProfile34.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile35.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile36.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile37.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile4.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile5.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile6.pubxml" />

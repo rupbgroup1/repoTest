@@ -87,7 +87,49 @@ namespace WebApplication1.Models.DAL
         }
 
 
+        
+            public List<SubCategory> GetAllSCategories()
+        {
+            List<SubCategory> sCategoriesList = new List<SubCategory>();
+            SqlConnection con = null;
 
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "select * from BusinessCat";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    SubCategory c = new SubCategory();
+                    c.Id = Convert.ToInt32(dr["ID"]);
+                    c.Name = (string)dr["CatName"];
+                    c.Icon = (string)dr["CatIcon"];
+
+                    sCategoriesList.Add(c);
+                }
+
+                return sCategoriesList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+
+        }
         //*****************Events***************************************
 
         //all nei's events
@@ -847,7 +889,237 @@ namespace WebApplication1.Models.DAL
             }
         }
 
+        //*********
+        //****************Losts***************************************
+        //*********
 
+        //all nei's Losts
+        public List<Losts> GetAllNeiLosts(string neiName)
+        {
+            List<Losts> lostsList = new List<Losts>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "select * from Losts where NeighboorhoodName='" + neiName + "' and LostStatus='False'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Losts lost = new Losts();
+                    lost.Id = Convert.ToInt32(dr["Id"]);
+                    lost.Title = (string)dr["Title"];
+                    if (dr["LostDescription"].GetType() != typeof(DBNull))
+                    {
+                       lost.Description = (string)dr["LostDescription"];
+                    }
+                    if (dr["ImageId"].GetType() != typeof(DBNull))
+                    {
+                        lost.ImageId = (string)dr["ImageId"];
+                    }
+                    if (dr["LocationName"].GetType() != typeof(DBNull))
+                    {
+                        lost.Location = (string)dr["LocationName"];
+                    }
+                    if (dr["FoundDate"].GetType() != typeof(DBNull))
+                    {
+                        lost.FoundDate = Convert.ToString(dr["FoundDate"]);
+                    }
+                    lost.Status= Convert.ToBoolean(dr["LostStatus"]);
+                    lost.WhoFound = Convert.ToInt32(dr["whoFound"]);
+                    lostsList.Add(lost);
+                }
+
+                return lostsList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+
+        }
+
+        //services the user created
+        public List<Losts> GetMyLosts(int userId)
+        {
+            List<Losts> sList = new List<Losts>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = "select * from Losts where whoFound=" + userId;
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Losts lost = new Losts();
+                    lost.Id = Convert.ToInt32(dr["Id"]);
+                    lost.Title = (string)dr["Title"];
+                    if (dr["LostDescription"].GetType() != typeof(DBNull))
+                    {
+                        lost.Description = (string)dr["LostDescription"];
+                    }
+                    if (dr["ImageId"].GetType() != typeof(DBNull))
+                    {
+                        lost.ImageId = (string)dr["ImageId"];
+                    }
+                    if (dr["LocationName"].GetType() != typeof(DBNull))
+                    {
+                        lost.Location = (string)dr["LocationName"];
+                    }
+                    if (dr["FoundDate"].GetType() != typeof(DBNull))
+                    {
+                        lost.FoundDate = Convert.ToString(dr["FoundDate"]);
+                    }
+                    lost.Status = Convert.ToBoolean(dr["LostStatus"]);
+                    lost.WhoFound = Convert.ToInt32(dr["whoFound"]);
+                    sList.Add(lost);
+                }
+
+                return sList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+
+        }
+
+
+        //create new service command
+        private String BuildLostsInsertCommand(Losts s)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}')", s.Title, s.Description, s.ImageId, s.Location, s.FoundDate, s.Status, s.WhoFound, s.NeighboorhoodName);
+            String prefix = "INSERT INTO Losts" + "(Title, LostDescription, ImageId, LocationName, FoundDate, LostStatus, whoFound, NeighboorhoodName )";
+            command = prefix + sb.ToString();
+            return command;
+        }
+
+        //post new event 
+        public int PostNewLosts(Losts s)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildLostsInsertCommand(s);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+
+
+        //update service - command
+        private String BuildLostsUpdateCommand(Losts s)
+        {
+            String command;
+            StringBuilder sb = new StringBuilder();
+
+            command = "update Losts set LostStatus = 'True' Where Id=" + s.Id;
+            return command;
+        }
+
+        //update event
+        public int UpdateLosts(Losts s)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = BuildLostsUpdateCommand(s);      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
         //*****************User***************************************
 
         //add new user command

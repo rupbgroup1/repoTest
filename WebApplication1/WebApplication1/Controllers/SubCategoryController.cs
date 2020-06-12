@@ -8,15 +8,14 @@ using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
-    public class CategoryController : ApiController
+    public class SubCategoryController : ApiController
     {
         [HttpGet]
-        [Route("api/Category/All")]
-        public List<Category> GetAllCategories()
+        [Route("api/SubCategory/All")]
+        public List<SubCategory> GetAllCategories()
         {
-            Category c = new Category();
+            SubCategory c = new SubCategory();
             return c.GetAllCategories();
         }
-        
     }
 }

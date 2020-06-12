@@ -26,15 +26,29 @@
             //putPass();
             //getEvents();
             //getAtt();
-            // getCat();
+            //getCat();
             //DeleteEventAtt();
             //putEvent();
             //postEvent();
             //getMyService();
-            insertService();
+            //insertService();
+            //getMyLosts();
+            postNewLost();
 
         });
 
+        function postNewLost() {
+            let lost = {
+                Title: "נמצאו אופנייים ורודות",
+                Description: "נמצאו ברחוב הציפורים ליד גן השחף ביום שישי בשעה אחת",
+                Location:"גן השחף",
+                FoundDate: "2020-05-21",
+                Status: "False",
+                WhoFound: 1,
+                NeighboorhoodName:"תל מונד"
+            }
+            ajaxCall("POST", "../api/Losts/New", JSON.stringify(lost), succ2, err2);
+        }
         function insertService() {
             let service = {
                 "Categories": 1,
@@ -111,10 +125,15 @@
 
             ajaxCall("GET", "../api/Services/My?userId=1", "", succ3, err3);
         }
+        
+        function getMyLosts() {
+
+            ajaxCall("GET", "../api/Losts/My?userId=1", "", succ3, err3);
+        }
 
         function getCat() {
 
-            ajaxCall("GET", "../api/Category/All", "", succ3, err3);
+            ajaxCall("GET", "../api/SubCategory/All", "", succ3, err3);
         }
 
         function getEvents() {
