@@ -9,7 +9,7 @@ namespace WebApplication1.Controllers
 {
     public class TimerController : ApiController
     {
-        //code for timer
+        //code for timer start
         [HttpGet]
         [Route("api/Timer/start")]
         public void StartTimer()
@@ -17,7 +17,7 @@ namespace WebApplication1.Controllers
             WebApiApplication.StartTimer();
         }
 
-        //code for timer
+        //code for timer end
         [HttpGet]
         [Route("api/Timer/stop")]
         public void StopTimer()

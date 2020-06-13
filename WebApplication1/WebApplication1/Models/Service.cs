@@ -50,13 +50,13 @@ namespace WebApplication1.Models
             return dbs.GetAllNeiServices(neiName);
         }
 
-        
+
         public List<Service> GetMyService(int id)
         {
             DBservices dbs = new DBservices();
             return dbs.GetMyServices(id);
         }
-        
+
 
 
         public int PostNewService(Service s)
@@ -70,6 +70,19 @@ namespace WebApplication1.Models
         {
             DBservices dbs = new DBservices();
             return dbs.UpdateService(s);
+        }
+
+
+        public int UpdateServiceRate(int id, int rate)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.UpdateServiceRate(id, rate);
+        }
+
+        public int UpdateRate()
+        {
+            DBservices dbs = new DBservices();
+            return dbs.UpdateRate();
         }
 
     }

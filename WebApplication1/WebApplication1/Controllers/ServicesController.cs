@@ -49,6 +49,15 @@ namespace WebApplication1.Controllers
             return s.UpdateServices(s);
         }
 
-       
+        //update service - Rate
+        [HttpPut]
+        [Route("api/Services/UpdateRate/{serviceId}/{serviceRate}")]
+        public int UpdateServiceRate(int serviceId, int serviceRate)
+        {
+            Service s = new Service();
+            return s.UpdateServiceRate(serviceId, serviceRate);
+        }
+
+
     }
 }

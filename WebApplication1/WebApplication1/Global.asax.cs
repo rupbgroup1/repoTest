@@ -19,13 +19,13 @@ namespace WebApplication1
 
         protected void Application_Start()
         {
-
             AreaRegistration.RegisterAllAreas();
             GlobalConfiguration.Configure(WebApiConfig.Register);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            //===Once a week
             timer.Interval = 650000000;
             timer.Elapsed += tm_Tick;
             path = Server.MapPath("/");
@@ -43,6 +43,11 @@ namespace WebApplication1
         {
             Votes v = new Votes();
             return v.UpdateParamsValue();
+        }
+        private int updateRate()
+        {
+            Service s = new Service();
+            return s.UpdateRate();
         }
 
         //code for timer

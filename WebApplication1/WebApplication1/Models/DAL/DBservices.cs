@@ -87,8 +87,8 @@ namespace WebApplication1.Models.DAL
         }
 
 
-        
-            public List<SubCategory> GetAllSCategories()
+
+        public List<SubCategory> GetAllSCategories()
         {
             List<SubCategory> sCategoriesList = new List<SubCategory>();
             SqlConnection con = null;
@@ -636,7 +636,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "select * from ServicesTable where Neighboorhood='" + neiName+"'";
+                String selectSTR = "select * from ServicesTable where Neighboorhood='" + neiName + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -752,7 +752,7 @@ namespace WebApplication1.Models.DAL
                     }
                     if (dr["OpenHoursEnds"].GetType() != typeof(DBNull))
                     {
-                        string ohe= Convert.ToString(dr["OpenHoursEnds"]);
+                        string ohe = Convert.ToString(dr["OpenHoursEnds"]);
                         s.OpenHoursEnds = ohe.Substring(0, 5);
                     }
                     s.Categories = Convert.ToInt32(dr["Categories"]);
@@ -842,8 +842,8 @@ namespace WebApplication1.Models.DAL
         {
             String command;
             StringBuilder sb = new StringBuilder();
-         
-            command = "update ServicesTable set ServiceName='" + s.ServiceName + "', ImagePrimary='" + s.ImageGallery + "', Rate=" + s.Rate + ", ServiceDescription='" + s.Description + "', ServiceAddress='" + s.ServiceAddress + "', Lat=" + s.Lat + ", Lan=" + s.Lan + ", OwnerId=" +s.Owner + ", OpenDays='" + s.OpenDays + "', OpenHoursStart='" + s.OpenHoursStart + "', OpenHoursEnds='" +s.OpenHoursEnds + "', Categories=" + s.Categories + ", Neighboorhood='" + s.NeighborhoodId + "' Where ServiceId=" + s.ServiceId;
+
+            command = "update ServicesTable set ServiceName='" + s.ServiceName + "', ImagePrimary='" + s.ImageGallery + "', Rate=" + s.Rate + ", ServiceDescription='" + s.Description + "', ServiceAddress='" + s.ServiceAddress + "', Lat=" + s.Lat + ", Lan=" + s.Lan + ", OwnerId=" + s.Owner + ", OpenDays='" + s.OpenDays + "', OpenHoursStart='" + s.OpenHoursStart + "', OpenHoursEnds='" + s.OpenHoursEnds + "', Categories=" + s.Categories + ", Neighboorhood='" + s.NeighborhoodId + "' Where ServiceId=" + s.ServiceId;
             return command;
         }
 
@@ -889,6 +889,87 @@ namespace WebApplication1.Models.DAL
             }
         }
 
+
+        public int UpdateServiceRate(int id, int rate)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = "update ServicesTable set TotalRate=TotalRate+" + rate + ", TotalVotes=TotalVotes+1 where ServiceId=" + id;
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+
+        public int UpdateRate()
+        {
+            SqlConnection con;
+            con = connect("DBConnectionString"); // create the connection
+            SqlCommand cmd = new SqlCommand("SP_calculateServiceRate", con);
+
+            try
+            {
+
+                // 2. set the command object so it knows to execute a stored procedure
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                // 3. add parameter to command, which will be passed to the stored procedure
+                // cmd.Parameters.Add(new SqlParameter("@userCode", userId));
+                // execute the command
+                // SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+
         //*********
         //****************Losts***************************************
         //*********
@@ -916,7 +997,7 @@ namespace WebApplication1.Models.DAL
                     lost.Title = (string)dr["Title"];
                     if (dr["LostDescription"].GetType() != typeof(DBNull))
                     {
-                       lost.Description = (string)dr["LostDescription"];
+                        lost.Description = (string)dr["LostDescription"];
                     }
                     if (dr["ImageId"].GetType() != typeof(DBNull))
                     {
@@ -930,7 +1011,7 @@ namespace WebApplication1.Models.DAL
                     {
                         lost.FoundDate = Convert.ToString(dr["FoundDate"]);
                     }
-                    lost.Status= Convert.ToBoolean(dr["LostStatus"]);
+                    lost.Status = Convert.ToBoolean(dr["LostStatus"]);
                     lost.WhoFound = Convert.ToInt32(dr["whoFound"]);
                     lostsList.Add(lost);
                 }
@@ -953,7 +1034,7 @@ namespace WebApplication1.Models.DAL
 
         }
 
-        //services the user created
+
         public List<Losts> GetMyLosts(int userId)
         {
             List<Losts> sList = new List<Losts>();
@@ -963,7 +1044,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "select * from Losts where whoFound=" + userId;
+                String selectSTR = "select * from Losts where whoFound=" + userId + " and LostStatus=0";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader

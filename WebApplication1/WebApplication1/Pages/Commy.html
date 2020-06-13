@@ -31,12 +31,25 @@
             //putEvent();
             //postEvent();
             //getMyService();
-            //insertService();
+            insertService();
             //getMyLosts();
-            postNewLost();
+            //postNewLost();
+            //updatelost();
 
         });
-
+        function updatelost() {
+            let lost = {
+                "Description": "וי",
+                "FoundDate": "6/17/2020 12:00:00 AM",
+                "Id": 4,
+                "ImageId": "",
+                "Location": "ייי",
+                "NeighboorhoodName": null,
+                "Status": true,
+                "Title": "טיו",
+                "WhoFound": 1,
+            }
+        }
         function postNewLost() {
             let lost = {
                 Title: "נמצאו אופנייים ורודות",
@@ -51,18 +64,14 @@
         }
         function insertService() {
             let service = {
-                "Categories": 1,
-                    "Description": "ללללל",
-                        "Lan": 34.91763884201646,
-                            "Lat": 32.24986173131224,
-                                "NeighborhoodId": "תל מונד",
-                                    "OpenDays": "א,ב,ג,ד",
-                                        "OpenHoursEnds": "05:30",
-                                            "OpenHoursStart": "09:30",
-                                                "Owner": 1,
-                                                    "ServiceAddress": "הדקל 30, תל מונד, ישראל",
-                                                        "ServiceId": 6,
-                                                            "ServiceName": "בדיקה",
+                    "Categories": 2,
+                    "Description": "מגוון הנחות על מאפים ועוגות לתושבי השכונה!",
+                    "NeighborhoodId": "תל מונד",
+                    "OpenDays": "א-ה",
+                    "OpenHoursEnds": "11:30",
+                    "OpenHoursStart": "12:30",
+                    "Owner": 1,
+                    "ServiceName": "ביסקוטי- בית קפה שכונתי"
             }
             ajaxCall("POST", "../api/Services/New", JSON.stringify(service), succ2, err2);
         }

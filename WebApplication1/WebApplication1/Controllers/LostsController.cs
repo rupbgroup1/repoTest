@@ -41,7 +41,6 @@ namespace WebApplication1.Controllers
         }
 
         //**********Put***************
-        //update service - edit
         [HttpPut]
         [Route("api/Losts/Update")]
         public int UpdateLosts([FromBody] Losts s)
