@@ -11,7 +11,7 @@ namespace WebApplication1.Models
         int serviceId;
         string serviceName;
         string imageGallery;
-        int rate;
+        double rate;
         string description;
         string serviceAddress;
         double lat;
@@ -31,7 +31,7 @@ namespace WebApplication1.Models
         public int ServiceId { get => serviceId; set => serviceId = value; }
         public string ServiceName { get => serviceName; set => serviceName = value; }
         public string ImageGallery { get => imageGallery; set => imageGallery = value; }
-        public int Rate { get => rate; set => rate = value; }
+        public double Rate { get => rate; set => rate = value; }
         public string Description { get => description; set => description = value; }
         public string ServiceAddress { get => serviceAddress; set => serviceAddress = value; }
         public int Owner { get => owner; set => owner = value; }

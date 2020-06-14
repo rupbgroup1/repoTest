@@ -626,7 +626,7 @@ namespace WebApplication1.Models.DAL
 
         //*****************Service***************************************
 
-        //all nei's events
+        //all nei's Services
         public List<Service> GetAllNeiServices(string neiName)
         {
             List<Service> sList = new List<Service>();
@@ -651,7 +651,10 @@ namespace WebApplication1.Models.DAL
                     {
                         s.ImageGallery = (string)dr["ImagePrimary"];
                     }
-                    s.Rate = Convert.ToInt32(dr["Rate"]);
+                    if (Convert.ToInt32(dr["TotalVotes"]) != 0)
+                    {
+                         s.Rate = Convert.ToInt32(dr["TotalRate"]) / Convert.ToInt32(dr["TotalVotes"]);
+                    }
                     s.Description = (string)dr["ServiceDescription"];
                     if (dr["ServiceAddress"].GetType() != typeof(DBNull))
                     {
@@ -726,7 +729,10 @@ namespace WebApplication1.Models.DAL
                     {
                         s.ImageGallery = (string)dr["ImagePrimary"];
                     }
-                    s.Rate = Convert.ToInt32(dr["Rate"]);
+                    if (Convert.ToInt32(dr["TotalVotes"]) != 0)
+                    {
+                        s.Rate = Convert.ToInt32(dr["TotalRate"]) / Convert.ToInt32(dr["TotalVotes"]);
+                    }
                     s.Description = (string)dr["ServiceDescription"];
                     if (dr["ServiceAddress"].GetType() != typeof(DBNull))
                     {
@@ -787,8 +793,8 @@ namespace WebApplication1.Models.DAL
             //string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
             //string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
             // use a string builder to create the dynamic string
-            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}')", s.ServiceName, s.ImageGallery, s.Rate, s.Description, s.ServiceAddress, s.Lat, s.Lan, s.Owner, s.OpenDays, s.OpenHoursStart, s.OpenHoursEnds, s.Categories, s.NeighborhoodId);
-            String prefix = "INSERT INTO ServicesTable" + "(ServiceName, ImagePrimary, Rate , ServiceDescription, ServiceAddress, Lat , Lan, OwnerId, OpenDays, OpenHoursStart, OpenHoursEnds, Categories, Neighboorhood)";
+            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}')", s.ServiceName, s.ImageGallery, s.Description, s.ServiceAddress, s.Lat, s.Lan, s.Owner, s.OpenDays, s.OpenHoursStart, s.OpenHoursEnds, s.Categories, s.NeighborhoodId);
+            String prefix = "INSERT INTO ServicesTable" + "(ServiceName, ImagePrimary , ServiceDescription, ServiceAddress, Lat , Lan, OwnerId, OpenDays, OpenHoursStart, OpenHoursEnds, Categories, Neighboorhood)";
             command = prefix + sb.ToString();
             return command;
         }
@@ -843,7 +849,7 @@ namespace WebApplication1.Models.DAL
             String command;
             StringBuilder sb = new StringBuilder();
 
-            command = "update ServicesTable set ServiceName='" + s.ServiceName + "', ImagePrimary='" + s.ImageGallery + "', Rate=" + s.Rate + ", ServiceDescription='" + s.Description + "', ServiceAddress='" + s.ServiceAddress + "', Lat=" + s.Lat + ", Lan=" + s.Lan + ", OwnerId=" + s.Owner + ", OpenDays='" + s.OpenDays + "', OpenHoursStart='" + s.OpenHoursStart + "', OpenHoursEnds='" + s.OpenHoursEnds + "', Categories=" + s.Categories + ", Neighboorhood='" + s.NeighborhoodId + "' Where ServiceId=" + s.ServiceId;
+            command = "update ServicesTable set ServiceName='" + s.ServiceName + "', ImagePrimary='" + s.ImageGallery + "', ServiceDescription='" + s.Description + "', ServiceAddress='" + s.ServiceAddress + "', Lat=" + s.Lat + ", Lan=" + s.Lan + ", OwnerId=" + s.Owner + ", OpenDays='" + s.OpenDays + "', OpenHoursStart='" + s.OpenHoursStart + "', OpenHoursEnds='" + s.OpenHoursEnds + "', Categories=" + s.Categories + ", Neighboorhood='" + s.NeighborhoodId + "' Where ServiceId=" + s.ServiceId;
             return command;
         }
 

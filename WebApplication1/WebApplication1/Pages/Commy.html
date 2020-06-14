@@ -30,13 +30,18 @@
             //DeleteEventAtt();
             //putEvent();
             //postEvent();
-            //getMyService();
-            insertService();
+            getMyService();
+           // insertService();
             //getMyLosts();
             //postNewLost();
             //updatelost();
+            //updateRate();
 
         });
+
+        function updateRate() {
+            ajaxCall("PUT", "../api/Services/UpdateRate/4/1", JSON.stringify(lost), succ2, err2);
+        }
         function updatelost() {
             let lost = {
                 "Description": "וי",
@@ -65,13 +70,13 @@
         function insertService() {
             let service = {
                     "Categories": 2,
-                    "Description": "מגוון הנחות על מאפים ועוגות לתושבי השכונה!",
+                    "Description": "טסט",
                     "NeighborhoodId": "תל מונד",
                     "OpenDays": "א-ה",
                     "OpenHoursEnds": "11:30",
                     "OpenHoursStart": "12:30",
-                    "Owner": 1,
-                    "ServiceName": "ביסקוטי- בית קפה שכונתי"
+                    "Owner": 26,
+                    "ServiceName": "טסט"
             }
             ajaxCall("POST", "../api/Services/New", JSON.stringify(service), succ2, err2);
         }
@@ -132,7 +137,7 @@
         
         function getMyService() {
 
-            ajaxCall("GET", "../api/Services/My?userId=1", "", succ3, err3);
+            ajaxCall("GET", "../api/Services/All?neiName=תל מונד", "", succ3, err3);
         }
         
         function getMyLosts() {
