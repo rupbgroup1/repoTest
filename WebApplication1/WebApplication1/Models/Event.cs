@@ -32,6 +32,7 @@ namespace WebApplication1.Models
         string endHour;
         string location;
         string neiCode;
+        int numOfAttendance;
 
         public Event()
         {
@@ -61,6 +62,7 @@ namespace WebApplication1.Models
         public int Attend { get => attend; set => attend = value; }
         public string Location { get => location; set => location = value; }
         public string NeiCode { get => neiCode; set => neiCode = value; }
+        public int NumOfAttendance { get => numOfAttendance; set => numOfAttendance = value; }
 
         public List<Event> GetAllNeiEvents(string neiName, int userId)
         {

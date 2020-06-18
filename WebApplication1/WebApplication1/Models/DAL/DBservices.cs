@@ -302,8 +302,8 @@ namespace WebApplication1.Models.DAL
             try
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
-
-                String selectSTR = "select EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, Gender, LocationLat, LocationLan, Location, OpenByUserCode, Category from EventsTable where OpenByUserCode=" + userId + " Order by StartDate Desc";
+                
+                String selectSTR = "select EventCode, EventName, EventDescription, StartDate, EndDate, NumOfParticipants, ImageLink, price, FromAge, ToAge, Gender, LocationLat, LocationLan, Location, OpenByUserCode, Category, (select count(distinct a.UserCode) from EventsAttendance a where a.EventCode = e.EventCode) as NumOfAttendance from EventsTable e where OpenByUserCode=" + userId + " Order by StartDate Desc";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -344,6 +344,7 @@ namespace WebApplication1.Models.DAL
                         e.Location = (string)dr["Location"];
                     }
                     e.CategoryId = Convert.ToInt32(dr["Category"]);
+                    e.NumOfAttendance = Convert.ToInt32(dr["NumOfAttendance"]);
 
                     eventsList.Add(e);
                 }
@@ -792,8 +793,7 @@ namespace WebApplication1.Models.DAL
             StringBuilder sb = new StringBuilder();
             //string startDate = e.StartDate.Split('T')[0] + "T" + e.StartHour.Split('T')[1];
             //string endDate = e.EndDate.Split('T')[0] + "T" + e.EndHour.Split('T')[1];
-            // use a string builder to create the dynamic string
-            sb.AppendFormat("Values('{0}', '{1}', '{2}', '{3}', '{4}', '{5}', '{6}', '{7}', '{8}', '{9}', '{10}', '{11}', '{12}')", s.ServiceName, s.ImageGallery, s.Description, s.ServiceAddress, s.Lat, s.Lan, s.Owner, s.OpenDays, s.OpenHoursStart, s.OpenHoursEnds, s.Categories, s.NeighborhoodId);
+            // use a string builder to create the dynamic string* '{7}', '{8}', '{9}', '{10}', '{11}', '{12}')", s.ServiceName, s.ImageGallery, s.Description, s.ServiceAddress, s.Lat, s.Lan, s.Owner, s.OpenDays, s.OpenHoursStart, s.OpenHoursEnds, s.Categories, s.NeighborhoodId);
             String prefix = "INSERT INTO ServicesTable" + "(ServiceName, ImagePrimary , ServiceDescription, ServiceAddress, Lat , Lan, OwnerId, OpenDays, OpenHoursStart, OpenHoursEnds, Categories, Neighboorhood)";
             command = prefix + sb.ToString();
             return command;
@@ -1593,7 +1593,7 @@ namespace WebApplication1.Models.DAL
             }
 
             // String cStr = BuildInsertCommand(user);      // helper method to build the insert string
-            String cStr = "Update Users set FamilyStatus='" + user.FamilyStatus + "', JobTitleCode=" + user.JobTitleId + ", WorkPlace='" + user.WorkPlace + "', NumberOfChildren=" + user.NumOfChildren + ",AboutMe='" + user.AboutMe + "' where UserCode=" + user.UserId;
+            String cStr = "Update Users set FirstName='" + user.FirstName + "', LastName='" + user.LastName + "',Gender='" + user.Gender + "', YearOfBirth='" + user.YearOfBirth + "', FamilyStatus ='" + user.FamilyStatus + "', ImageId='" + user.ImagePath + "', JobTitleCode=" + user.JobTitleId + ", WorkPlace='" + user.WorkPlace + "', NumberOfChildren=" + user.NumOfChildren + ",AboutMe='" + user.AboutMe + "' where UserCode=" + user.UserId;
             cmd = CreateCommand(cStr, con);             // create the command
 
             try

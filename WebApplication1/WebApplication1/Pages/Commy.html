@@ -25,12 +25,13 @@
             //startTimer();
             //putPass();
             //getEvents();
+            getMyEvents();
             //getAtt();
             //getCat();
             //DeleteEventAtt();
             //putEvent();
             //postEvent();
-            getMyService();
+            //getMyService();
            // insertService();
             //getMyLosts();
             //postNewLost();
@@ -153,6 +154,10 @@
         function getEvents() {
 
             ajaxCall("GET", "../api/Events/All/1/תל מונד", "", succ3, err3);
+        }
+        function getMyEvents() {
+
+            ajaxCall("GET", "../api/Events/My?userId=1", "", succ3, err3);
         }
 
         //change to start!!!
