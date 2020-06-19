@@ -11,7 +11,6 @@ namespace WebApplication1.Controllers
     public class UserController : ApiController
     {
         
-
         [HttpGet]
         [Route("api/User")]
         public int Get(string username)

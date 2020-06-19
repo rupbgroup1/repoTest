@@ -23,6 +23,7 @@ namespace WebApplication1.Models
         Event[] events;
         int categories;
         string neighborhoodId;
+        string ownerToken;
 
         public Service()
         {
@@ -43,6 +44,7 @@ namespace WebApplication1.Models
         public double Lat { get => lat; set => lat = value; }
         public double Lan { get => lan; set => lan = value; }
         public string NeighborhoodId { get => neighborhoodId; set => neighborhoodId = value; }
+        public string OwnerToken { get => ownerToken; set => ownerToken = value; }
 
         public List<Service> GetAllNeiServices(string neiName)
         {
@@ -56,7 +58,6 @@ namespace WebApplication1.Models
             DBservices dbs = new DBservices();
             return dbs.GetMyServices(id);
         }
-
 
 
         public int PostNewService(Service s)
@@ -78,6 +79,7 @@ namespace WebApplication1.Models
             DBservices dbs = new DBservices();
             return dbs.UpdateServiceRate(id, rate);
         }
+
 
         public int UpdateRate()
         {

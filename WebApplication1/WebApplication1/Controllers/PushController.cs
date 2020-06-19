@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Text;
 using System.Web.Http;
 using System.Web.Script.Serialization;
+using WebApplication1.Models;
 
 namespace WebApplication1.Controllers
 {
@@ -100,9 +101,5 @@ namespace WebApplication1.Controllers
         public Data data { get; set; }
     }
 
-    public class Data
-    {
-        public int grade { get; set; }
-        public string name { get; set; }
-    }
+    
 }

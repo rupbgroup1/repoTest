@@ -193,7 +193,6 @@
     <Compile Include="Controllers\CityController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\FileUploadController.cs" />
-    <Compile Include="Controllers\ImageController.cs" />
     <Compile Include="Controllers\IntrestsController.cs" />
     <Compile Include="Controllers\JobsController.cs" />
     <Compile Include="Controllers\LostsController.cs" />
@@ -213,6 +212,7 @@
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Category.cs" />
     <Compile Include="Models\DAL\DBservices.cs" />
+    <Compile Include="Models\Data.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\Image.cs" />
     <Compile Include="Models\Intrests.cs" />
@@ -299,6 +299,9 @@
     <None Include="Properties\PublishProfiles\FolderProfile39.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile4.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile40.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile41.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile42.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile43.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile5.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile6.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile7.pubxml" />

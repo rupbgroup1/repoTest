@@ -31,6 +31,7 @@ namespace WebApplication1.Models
         string cityName;
         string neighborhoodName;
         double matchRate;
+        string token;
         
 
         public User()
@@ -125,5 +126,6 @@ namespace WebApplication1.Models
         public string CityName { get => cityName; set => cityName = value; }
         public string NeighborhoodName { get => neighborhoodName; set => neighborhoodName = value; }
         public double MatchRate { get => matchRate; set => matchRate = value; }
+        public string Token { get => token; set => token = value; }
     }
 }

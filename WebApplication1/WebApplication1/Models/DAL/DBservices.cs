@@ -637,7 +637,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "select * from ServicesTable where Neighboorhood='" + neiName + "'";
+                String selectSTR = "select ServiceId, ServiceName, ImagePrimary, ServiceDescription, ServiceAddress, s.Lat, s.Lan, OwnerId, OpenDays,OpenHoursStart, OpenHoursEnds, Categories, Neighboorhood, TotalRate, TotalVotes, u.Token from ServicesTable s left join Users u on OwnerId=UserCode where Neighboorhood='" + neiName + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -684,6 +684,10 @@ namespace WebApplication1.Models.DAL
                     }
                     s.Categories = Convert.ToInt32(dr["Categories"]);
                     s.NeighborhoodId = (string)dr["Neighboorhood"];
+                    if (dr["Token"].GetType() != typeof(DBNull))
+                    {
+                        s.OwnerToken = Convert.ToString(dr["Token"]);
+                    }
                     sList.Add(s);
                 }
 
@@ -1263,10 +1267,53 @@ namespace WebApplication1.Models.DAL
             }
         }
 
-        //get user by username and password - Called from login screen
+        //update the new token for the user
+        public int updateToken(User u)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
 
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = "update Users set Token='" + u.Token + "' where Email='" + u.Email + "' and PasswordUser='" + u.Password + "'";      // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+        //get user by username and password - Called from login screen
         public User getUserByDetails(User u)
         {
+            //if (u.Token != "") { updateToken(u); };
+            updateToken(u);
             User User = getUserByDetailsUser(u);
             Intrests[] iArray = getUserByDetailsInterest(User);
             Kids[] kArray = getUserByDetailsKids(User);
@@ -1419,6 +1466,10 @@ namespace WebApplication1.Models.DAL
                     {
                         userDetails.NeighborhoodName = (string)dr["NeighborhoodName"];
                     }
+                    if (dr["Token"].GetType() != typeof(DBNull))
+                    {
+                        userDetails.Token = (string)dr["Token"];
+                    }
 
                 }
 
@@ -1478,54 +1529,6 @@ namespace WebApplication1.Models.DAL
             }
         }
 
-        //get all details by Id
-        public User getUserDetails(int Id)
-        {
-            User userDetails = new User();
-            SqlConnection con = null;
-
-            try
-            {
-                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
-                String selectSTR = "SELECT * FROM Users where UserCode=" + Id;
-                SqlCommand cmd = new SqlCommand(selectSTR, con);
-
-                // get a reader
-                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
-
-                while (dr.Read())
-                {
-                    userDetails.FirstName = (string)dr["FirstName"];
-                    userDetails.LastName = (string)dr["LastName"];
-                    userDetails.Gender = Convert.ToInt32(dr["Gender"]);
-                    userDetails.ImagePath = (string)dr["ImageId"];
-                    userDetails.JobTitleId = Convert.ToInt32(dr["JobTitleCode"]);
-                    userDetails.WorkPlace = (string)dr["WorkPlace"];
-                    userDetails.FamilyStatus = (string)dr["FamilyStatus"];
-                    userDetails.CityName = (string)dr["CityName"];
-                    userDetails.Lan = Convert.ToDouble(dr["Long"]);
-                    userDetails.Lat = Convert.ToDouble(dr["Lat"]);
-
-
-
-                }
-
-                return userDetails;
-            }
-            catch (Exception ex)
-            {
-                // write to log
-                throw (ex);
-            }
-            finally
-            {
-                if (con != null)
-                {
-                    con.Close();
-                }
-
-            }
-        }
 
         public int updatePassword(User user)
         {
@@ -1842,7 +1845,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, YearOfBirth, AboutMe, Long, Lat FROM Users Where NeighborhoodName='" + neiName + "' AND (FirstName LIKE '%" + firstName + "%' OR LastName LIKE '%" + firstName + "%') AND (FirstName LIKE '%" + lastName + "%' OR LastName LIKE '%" + lastName + "%') ;";
+                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, YearOfBirth, AboutMe, Long, Lat, Token FROM Users Where NeighborhoodName='" + neiName + "' AND (FirstName LIKE '%" + firstName + "%' OR LastName LIKE '%" + firstName + "%') AND (FirstName LIKE '%" + lastName + "%' OR LastName LIKE '%" + lastName + "%') ;";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -1862,6 +1865,10 @@ namespace WebApplication1.Models.DAL
                     }
                     user.Lan = Convert.ToDouble(dr["Long"]);
                     user.Lat = Convert.ToDouble(dr["Lat"]);
+                    if (dr["Token"].GetType() != typeof(DBNull))
+                    {
+                        user.Token = (string)dr["Token"];
+                    }
 
 
 
@@ -1897,7 +1904,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, YearOfBirth, AboutMe, Long, Lat FROM Users Where NeighborhoodName='" + neiName + "' AND (FirstName LIKE '%" + userName + "%' OR LastName LIKE '%" + userName + "%');";
+                String selectSTR = "SELECT UserCode, FirstName, LastName, Gender, YearOfBirth, AboutMe, Long, Lat, Token FROM Users Where NeighborhoodName='" + neiName + "' AND (FirstName LIKE '%" + userName + "%' OR LastName LIKE '%" + userName + "%');";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -1917,7 +1924,10 @@ namespace WebApplication1.Models.DAL
                     }
                     user.Lan = Convert.ToDouble(dr["Long"]);
                     user.Lat = Convert.ToDouble(dr["Lat"]);
-
+                    if (dr["Token"].GetType() != typeof(DBNull))
+                    {
+                        user.Token = (string)dr["Token"];
+                    }
 
                     userByNameList.Add(user);
                 }
@@ -1949,7 +1959,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT * FROM Users LEFT JOIN ON UsersAndIntrests.UserCode = Users.UserCode Where NeighborhoodName=";
+                String selectSTR = "SELECT * FROM Users LEFT JOIN ON UsersAndIntrests.UserCode = Users.UserCode Where NeighborhoodName='"+neiName+"'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -1968,6 +1978,10 @@ namespace WebApplication1.Models.DAL
                     }
                     user.Lat = Convert.ToDouble(dr["Lat"]);
                     user.Lan = Convert.ToDouble(dr["long"]);
+                    if (dr["Token"].GetType() != typeof(DBNull))
+                    {
+                        user.Token = (string)dr["Token"];
+                    }
 
                     userInNeiList.Add(user);
                 }
@@ -2022,6 +2036,10 @@ namespace WebApplication1.Models.DAL
                     }
                     user.Lan = Convert.ToDouble(dr["Long"]);
                     user.Lat = Convert.ToDouble(dr["Lat"]);
+                    if (dr["Token"].GetType() != typeof(DBNull))
+                    {
+                        user.Token = (string)dr["Token"];
+                    }
                     user.MatchRate = Math.Round(Convert.ToDouble(dr["FinalScore"]) * 100, 1);
 
 
@@ -2055,7 +2073,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT Users.UserCode, FirstName, LastName, Gender, YearOfBirth, AboutMe, Lat,Long FROM Users LEFT JOIN UsersAndIntrests  ON Users.UserCode = UsersAndIntrests.UserCode Where NeighborhoodName='" + neiName + "' AND IntrestId=" + userIntrest;
+                String selectSTR = "SELECT Users.UserCode, FirstName, LastName, Gender, YearOfBirth, AboutMe, Lat,Long, Token FROM Users LEFT JOIN UsersAndIntrests  ON Users.UserCode = UsersAndIntrests.UserCode Where NeighborhoodName='" + neiName + "' AND IntrestId=" + userIntrest;
 
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
@@ -2077,6 +2095,10 @@ namespace WebApplication1.Models.DAL
                     }
                     user.Lat = Convert.ToDouble(dr["Lat"]);
                     user.Lan = Convert.ToDouble(dr["Long"]);
+                    if (dr["Token"].GetType() != typeof(DBNull))
+                    {
+                        user.Token = (string)dr["Token"];
+                    }
 
                     userByNameList.Add(user);
                 }

@@ -17,15 +17,15 @@
             //getUserByI();
             //getInterests();
             //GETI();
-            //  put();
-            // getMatch();
+            // put();
+             getMatch();
             // getParam();
             //putParam();
             // updateUserVotes();
             //startTimer();
             //putPass();
             //getEvents();
-            getMyEvents();
+            //getMyEvents();
             //getAtt();
             //getCat();
             //DeleteEventAtt();
@@ -180,7 +180,8 @@
         function getUser() {
             searchKeys = {
                 Email: "test@gmail.com",
-                Password: "111111"
+                Password: "111111", 
+                Token:"ExponentPushToken[cQYyeHDo4l_zVTPLg5aq-w]"
             }
             ajaxCall("POST", "../api/User/login", JSON.stringify(searchKeys), succ2, err2);
         }
