@@ -142,7 +142,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = " select E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, E.Gender, LocationLat, LocationLan, Location, OpenByUserCode, Category, FirstName, LastName, U.UserCode, A.EventCode as attend from EventsTable E left join Users U on E.OpenByUserCode=U.UserCode left join (select EventCode from EventsAttendance where UserCode=" + userId + " ) A on E.EventCode=A.EventCode where E.NeighborhoodName = '" + neiName + "' and E.EndDate >= GETDATE() Order by E.StartDate";
+                String selectSTR = " select distinct E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, LocationLat, LocationLan, Location, OpenByUserCode, Category, FirstName, LastName, U.UserCode, A.EventCode as attend from EventsTable E left join Users U on E.OpenByUserCode=U.UserCode left join (select EventCode from EventsAttendance where UserCode=" + userId + " ) A on E.EventCode=A.EventCode where E.NeighborhoodName = '" + neiName + "' and E.EndDate >= GETDATE() and OpenByUserCode<> "+ userId + " Order by E.StartDate";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -166,10 +166,7 @@ namespace WebApplication1.Models.DAL
                     e.Price = Convert.ToInt32(dr["Price"]);
                     e.FromAge = Convert.ToInt32(dr["FromAge"]);
                     e.ToAge = Convert.ToInt32(dr["ToAge"]);
-                    if (dr["Gender"].GetType() != typeof(DBNull))
-                    {
-                        e.Gender = Convert.ToInt32(dr["Gender"]);
-                    }
+                    
                     if (dr["LocationLat"].GetType() != typeof(DBNull))
                     {
                         e.Lat = Convert.ToDouble(dr["LocationLat"]);
@@ -224,7 +221,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "  select DISTINCT E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, E.Gender, LocationLat, LocationLan, Location, OpenByUserCode, Category, U.FirstName, U.LastName from EventsAttendance A left join EventsTable E on A.EventCode = E.EventCode left join Users U on E.OpenByUserCode=U.UserCode where A.UserCode=" + userId;
+                String selectSTR = "  select DISTINCT E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, LocationLat, LocationLan, Location, OpenByUserCode, Category, U.FirstName, U.LastName from EventsAttendance A left join EventsTable E on A.EventCode = E.EventCode left join Users U on E.OpenByUserCode=U.UserCode where A.UserCode=" + userId;
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -248,10 +245,6 @@ namespace WebApplication1.Models.DAL
                     e.Price = Convert.ToInt32(dr["Price"]);
                     e.FromAge = Convert.ToInt32(dr["FromAge"]);
                     e.ToAge = Convert.ToInt32(dr["ToAge"]);
-                    if (dr["Gender"].GetType() != typeof(DBNull))
-                    {
-                        e.Gender = Convert.ToInt32(dr["Gender"]);
-                    }
                     if (dr["LocationLat"].GetType() != typeof(DBNull))
                     {
                         e.Lat = Convert.ToDouble(dr["LocationLat"]);
@@ -303,7 +296,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
                 
-                String selectSTR = "select EventCode, EventName, EventDescription, StartDate, EndDate, NumOfParticipants, ImageLink, price, FromAge, ToAge, Gender, LocationLat, LocationLan, Location, OpenByUserCode, Category, (select count(distinct a.UserCode) from EventsAttendance a where a.EventCode = e.EventCode) as NumOfAttendance from EventsTable e where OpenByUserCode=" + userId + " Order by StartDate Desc";
+                String selectSTR = "select EventCode, EventName, EventDescription, StartDate, EndDate, NumOfParticipants, ImageLink, price, FromAge, ToAge, LocationLat, LocationLan, Location, OpenByUserCode, Category, (select count(distinct a.UserCode) from EventsAttendance a where a.EventCode = e.EventCode) as NumOfAttendance from EventsTable e where OpenByUserCode=" + userId + " Order by StartDate Desc";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -327,10 +320,7 @@ namespace WebApplication1.Models.DAL
                     e.Price = Convert.ToInt32(dr["Price"]);
                     e.FromAge = Convert.ToInt32(dr["FromAge"]);
                     e.ToAge = Convert.ToInt32(dr["ToAge"]);
-                    if (dr["Gender"].GetType() != typeof(DBNull))
-                    {
-                        e.Gender = Convert.ToInt32(dr["Gender"]);
-                    }
+                    
                     if (dr["LocationLat"].GetType() != typeof(DBNull))
                     {
                         e.Lat = Convert.ToDouble(dr["LocationLat"]);
@@ -1312,8 +1302,8 @@ namespace WebApplication1.Models.DAL
         //get user by username and password - Called from login screen
         public User getUserByDetails(User u)
         {
-            //if (u.Token != "") { updateToken(u); };
-            updateToken(u);
+            if (u.Token != null) { updateToken(u); };
+            //updateToken(u);
             User User = getUserByDetailsUser(u);
             Intrests[] iArray = getUserByDetailsInterest(User);
             Kids[] kArray = getUserByDetailsKids(User);

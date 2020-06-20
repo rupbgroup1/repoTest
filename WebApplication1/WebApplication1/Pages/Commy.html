@@ -18,13 +18,13 @@
             //getInterests();
             //GETI();
             // put();
-             getMatch();
+            // getMatch();
             // getParam();
             //putParam();
             // updateUserVotes();
             //startTimer();
             //putPass();
-            //getEvents();
+            getEvents();
             //getMyEvents();
             //getAtt();
             //getCat();
@@ -95,10 +95,15 @@
                 "EndHour": "2020-05-21T15:33:49.121Z",
                 "ToAge": "10",
                 "OpenedBy": 1,
-                "NeiCode": 'תל מונד', 
+                "NeiCode": 'תל מונד',
                 "Lat": 32.25805,
                 "Lan": 34.923285,
-                "Location": "מתנס כפר הס"
+                "Location": "מתנס כפר הס",
+                "Intrests": [
+                    { "id": 1 },
+                    { "id": 2 },
+                    { "id": 3 }
+                ]
 
             }
             ajaxCall("POST", "../api/Events/New", JSON.stringify(event), succ2, err2);
@@ -181,7 +186,7 @@
             searchKeys = {
                 Email: "test@gmail.com",
                 Password: "111111", 
-                Token:"ExponentPushToken[cQYyeHDo4l_zVTPLg5aq-w]"
+                Token:'ExponentPushToken[cQYyeHDo4l_zVTPLg5aq-w]'
             }
             ajaxCall("POST", "../api/User/login", JSON.stringify(searchKeys), succ2, err2);
         }

@@ -19,13 +19,11 @@ namespace WebApplication1.Models
         int openedBy;
         int fromAge;
         int toAge;
-        int gender;
         Service service;
         double lat;
         double lan;
         Intrests[] intrests;
         User[] attandance;
-        User admin;
         int categoryId;
         int attend;
         string startHour;
@@ -33,6 +31,7 @@ namespace WebApplication1.Models
         string location;
         string neiCode;
         int numOfAttendance;
+        User admin;
 
         public Event()
         {
@@ -51,11 +50,9 @@ namespace WebApplication1.Models
         public int OpenedBy { get => openedBy; set => openedBy = value; }
         public int FromAge { get => fromAge; set => fromAge = value; }
         public int ToAge { get => toAge; set => toAge = value; }
-        public int Gender { get => gender; set => gender = value; }
         public Service Service { get => service; set => service = value; }
         public Intrests[] Intrests { get => intrests; set => intrests = value; }
         public User[] Attandance { get => attandance; set => attandance = value; }
-        public User Admin { get => admin; set => admin = value; }
         public double Lat { get => lat; set => lat = value; }
         public double Lan { get => lan; set => lan = value; }
         public int CategoryId { get => categoryId; set => categoryId = value; }
@@ -63,6 +60,7 @@ namespace WebApplication1.Models
         public string Location { get => location; set => location = value; }
         public string NeiCode { get => neiCode; set => neiCode = value; }
         public int NumOfAttendance { get => numOfAttendance; set => numOfAttendance = value; }
+        public User Admin { get => admin; set => admin = value; }
 
         public List<Event> GetAllNeiEvents(string neiName, int userId)
         {

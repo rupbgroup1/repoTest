@@ -302,6 +302,8 @@
     <None Include="Properties\PublishProfiles\FolderProfile41.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile42.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile43.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile44.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile45.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile5.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile6.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile7.pubxml" />
