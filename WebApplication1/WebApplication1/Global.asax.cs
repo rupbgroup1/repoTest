@@ -44,11 +44,6 @@ namespace WebApplication1
             Votes v = new Votes();
             return v.UpdateParamsValue();
         }
-        private int updateRate()
-        {
-            Service s = new Service();
-            return s.UpdateRate();
-        }
 
         //code for timer
         public static void StartTimer()

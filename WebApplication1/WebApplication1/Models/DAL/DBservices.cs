@@ -64,6 +64,8 @@ namespace WebApplication1.Models.DAL
                     Category c = new Category();
                     c.CategoryId = Convert.ToInt32(dr["IdMainCategory"]);
                     c.CategoryName = (string)dr["NameMainCategory"];
+                    c.CategoryIcon = (string)dr["Icon"];
+
 
                     categoriesList.Add(c);
                 }
@@ -194,6 +196,89 @@ namespace WebApplication1.Models.DAL
                 }
 
                 return eventsList;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+
+        }
+        
+
+        //Recommended events for the user - by his interests
+        public List<Event> GetRecomendedEvents(string neiName, int userId)
+        {
+            List<Event> recomendedEvents = new List<Event>();
+            SqlConnection con = null;
+            
+            try
+            {
+                con = connect("DBConnectionString");
+                SqlCommand cmd = new SqlCommand("SP_findRecommendedEvents", con);
+
+                // 2. set the command object so it knows to execute a stored procedure
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                // 3. add parameter to command, which will be passed to the stored procedure
+                cmd.Parameters.Add(new SqlParameter("@userCode", userId));
+                cmd.Parameters.Add(new SqlParameter("@neiName", neiName));
+                // execute the command
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    Event e = new Event();
+                    e.Id = Convert.ToInt32(dr["EventCode"]);
+                    e.Name = (string)dr["EventName"];
+                    e.Desc = (string)dr["EventDescription"];
+                    e.StartDate = Convert.ToString(dr["StartDate"]);
+                    e.EndDate = Convert.ToString(dr["EndDate"]);
+                    e.StartHour = Convert.ToString(dr["StartDate"]);
+                    e.EndHour = Convert.ToString(dr["EndDate"]);
+                    e.NumOfParticipants = Convert.ToInt32(dr["NumOfParticipants"]);
+                    if (dr["ImageLink"].GetType() != typeof(DBNull))
+                    {
+                        e.Image = (string)dr["ImageLink"];
+                    }
+                    e.Price = Convert.ToInt32(dr["Price"]);
+                    e.FromAge = Convert.ToInt32(dr["FromAge"]);
+                    e.ToAge = Convert.ToInt32(dr["ToAge"]);
+
+                    if (dr["LocationLat"].GetType() != typeof(DBNull))
+                    {
+                        e.Lat = Convert.ToDouble(dr["LocationLat"]);
+                    }
+                    if (dr["LocationLan"].GetType() != typeof(DBNull))
+                    {
+                        e.Lan = Convert.ToDouble(dr["LocationLan"]);
+                    }
+                    if (dr["Location"].GetType() != typeof(DBNull))
+                    {
+                        e.Location = (string)dr["Location"];
+                    }
+                    e.CategoryId = Convert.ToInt32(dr["Category"]);
+                    User u = new User();
+                    u.UserId = Convert.ToInt32(dr["OpenByUserCode"]);
+                    u.FirstName = (string)dr["FirstName"];
+                    u.LastName = (string)dr["LastName"];
+                    e.Admin = u;
+                    if (dr["attend"].GetType() != typeof(DBNull))
+                    {
+                        e.Attend = 1;
+                    }
+                    recomendedEvents.Add(e);
+                }
+
+                return recomendedEvents;
             }
             catch (Exception ex)
             {
@@ -931,44 +1016,7 @@ namespace WebApplication1.Models.DAL
             }
         }
 
-
-        public int UpdateRate()
-        {
-            SqlConnection con;
-            con = connect("DBConnectionString"); // create the connection
-            SqlCommand cmd = new SqlCommand("SP_calculateServiceRate", con);
-
-            try
-            {
-
-                // 2. set the command object so it knows to execute a stored procedure
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                // 3. add parameter to command, which will be passed to the stored procedure
-                // cmd.Parameters.Add(new SqlParameter("@userCode", userId));
-                // execute the command
-                // SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-                int numEffected = cmd.ExecuteNonQuery(); // execute the command
-                return numEffected;
-            }
-            catch (Exception ex)
-            {
-                return 0;
-                // write to log
-                throw (ex);
-            }
-
-            finally
-            {
-                if (con != null)
-                {
-                    // close the db connection
-                    con.Close();
-                }
-            }
-        }
-
+        
 
         //*********
         //****************Losts***************************************
@@ -1559,6 +1607,43 @@ namespace WebApplication1.Models.DAL
                 }
             }
         }
+
+        //Get user's token
+        public string GetToken(int userId)
+        {
+            SqlConnection con = null;
+            string Token = "";
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+                String selectSTR = "SELECT Token FROM Users where UserCode=" + userId ;
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+                while (dr.Read())
+                {
+                    Token = (string)dr["Token"];
+                }
+
+                return Token;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                return null;
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
         //***************Extra reg**********************
 
         public int updateUserExtraDetails(User user)

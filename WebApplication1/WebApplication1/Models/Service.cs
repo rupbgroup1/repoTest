@@ -81,11 +81,6 @@ namespace WebApplication1.Models
         }
 
 
-        public int UpdateRate()
-        {
-            DBservices dbs = new DBservices();
-            return dbs.UpdateRate();
-        }
 
     }
 }

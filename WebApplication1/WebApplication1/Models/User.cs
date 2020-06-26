@@ -51,6 +51,12 @@ namespace WebApplication1.Models
             return dbs.getUserByDetails(user);
         }
 
+        public string GetToken(int userId)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetToken(userId);
+        }
+        
         public int GetUserByEmail(string userEmail)
         {
             DBservices dbs = new DBservices();

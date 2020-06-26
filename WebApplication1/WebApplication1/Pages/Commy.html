@@ -24,7 +24,7 @@
             // updateUserVotes();
             //startTimer();
             //putPass();
-            getEvents();
+            //getEvents();
             //getMyEvents();
             //getAtt();
             //getCat();
@@ -32,14 +32,22 @@
             //putEvent();
             //postEvent();
             //getMyService();
-           // insertService();
+            //insertService();
             //getMyLosts();
             //postNewLost();
             //updatelost();
             //updateRate();
+            //GetToken();
+            getRecommendedEvents()
 
         });
 
+        function getRecommendedEvents() {
+            ajaxCall("Get", "../api/Events/Recommended/1/תל מונד", "", succ2, err2);
+        }
+        function GetToken() {
+            ajaxCall("Get", "../api/User/Token?userId=138", "", succ2, err2);
+        }
         function updateRate() {
             ajaxCall("PUT", "../api/Services/UpdateRate/4/1", JSON.stringify(lost), succ2, err2);
         }

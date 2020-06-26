@@ -19,6 +19,14 @@ namespace WebApplication1.Controllers
             return userDetails.GetUserByEmail(username);
         }
 
+        [HttpGet]
+        [Route("api/User/Token")]
+        public string GetToken(int userId)
+        {
+            User user = new User();
+            return user.GetToken(userId);
+        }
+
         // POST api/User
         [HttpPost]
         [Route("api/User")]

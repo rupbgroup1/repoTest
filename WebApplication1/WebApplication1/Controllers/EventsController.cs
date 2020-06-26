@@ -29,6 +29,15 @@ namespace WebApplication1.Controllers
             return e.GetAllNeiEvents(neiName, userId);
         }
 
+        //Recommended Events
+        [HttpGet]
+        [Route("api/Events/Recommended/{userId}/{neiName}")]
+        public List<Event> GetRecomendedEvents(int userId, string neiName)
+        {
+            Event e = new Event();
+            return e.GetRecomendedEvents(neiName, userId);
+        }
+
         //events the user goes to 
         [HttpGet]
         [Route("api/Events/Att")]

@@ -68,6 +68,11 @@ namespace WebApplication1.Models
             return dbs.GetAllNeiEvents(neiName, userId);
         }
 
+        public List<Event> GetRecomendedEvents(string neiName, int userId)
+        {
+            DBservices dbs = new DBservices();
+            return dbs.GetRecomendedEvents(neiName, userId);
+        }
 
         public List<Event> GetAttends(int id)
         {
