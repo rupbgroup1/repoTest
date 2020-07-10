@@ -144,7 +144,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = " select distinct E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, LocationLat, LocationLan, Location, OpenByUserCode, Category, FirstName, LastName, U.UserCode, A.EventCode as attend from EventsTable E left join Users U on E.OpenByUserCode=U.UserCode left join (select EventCode from EventsAttendance where UserCode=" + userId + " ) A on E.EventCode=A.EventCode where E.NeighborhoodName = '" + neiName + "' and E.EndDate >= GETDATE() and OpenByUserCode<> "+ userId + " Order by E.StartDate";
+                String selectSTR = " select distinct E.EventCode, EventName,EventDescription, StartDate,EndDate, NumOfParticipants,ImageLink, price, FromAge,ToAge, LocationLat, LocationLan, Location, OpenByUserCode, Category, FirstName, LastName, U.UserCode, A.EventCode as attend from EventsTable E left join Users U on E.OpenByUserCode=U.UserCode left join (select EventCode from EventsAttendance where UserCode=" + userId + " ) A on E.EventCode=A.EventCode where E.NeighborhoodName = '" + neiName + "' and E.EndDate >= GETDATE() and OpenByUserCode<> " + userId + " Order by E.StartDate";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -168,7 +168,7 @@ namespace WebApplication1.Models.DAL
                     e.Price = Convert.ToInt32(dr["Price"]);
                     e.FromAge = Convert.ToInt32(dr["FromAge"]);
                     e.ToAge = Convert.ToInt32(dr["ToAge"]);
-                    
+
                     if (dr["LocationLat"].GetType() != typeof(DBNull))
                     {
                         e.Lat = Convert.ToDouble(dr["LocationLat"]);
@@ -212,14 +212,14 @@ namespace WebApplication1.Models.DAL
             }
 
         }
-        
+
 
         //Recommended events for the user - by his interests
         public List<Event> GetRecomendedEvents(string neiName, int userId)
         {
             List<Event> recomendedEvents = new List<Event>();
             SqlConnection con = null;
-            
+
             try
             {
                 con = connect("DBConnectionString");
@@ -380,7 +380,7 @@ namespace WebApplication1.Models.DAL
             try
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
-                
+
                 String selectSTR = "select EventCode, EventName, EventDescription, StartDate, EndDate, NumOfParticipants, ImageLink, price, FromAge, ToAge, LocationLat, LocationLan, Location, OpenByUserCode, Category, (select count(distinct a.UserCode) from EventsAttendance a where a.EventCode = e.EventCode) as NumOfAttendance from EventsTable e where OpenByUserCode=" + userId + " Order by StartDate Desc";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
@@ -405,7 +405,7 @@ namespace WebApplication1.Models.DAL
                     e.Price = Convert.ToInt32(dr["Price"]);
                     e.FromAge = Convert.ToInt32(dr["FromAge"]);
                     e.ToAge = Convert.ToInt32(dr["ToAge"]);
-                    
+
                     if (dr["LocationLat"].GetType() != typeof(DBNull))
                     {
                         e.Lat = Convert.ToDouble(dr["LocationLat"]);
@@ -555,8 +555,74 @@ namespace WebApplication1.Models.DAL
             }
         }
 
+        public void postEventInterests(Event e)
+        {
+            postEInterests(e);
+           //List<User> IntrestedUsers = getUsersToIntrestedInEvent(e);
+            
 
-        public int postEventInterests(Event e)
+        }
+
+        //public List<User> getUsersToIntrestedInEvent(Event e)
+        //{
+        //    List<User> listOfUsers = new List<User>();
+        //    SqlConnection con = null;
+
+        //    try
+        //    {
+        //        con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+        //        SqlCommand cmd = new SqlCommand("SP_calculateMatch", con);
+
+        //        // 2. set the command object so it knows to execute a stored procedure
+        //        cmd.CommandType = CommandType.StoredProcedure;
+
+        //        // 3. add parameter to command, which will be passed to the stored procedure
+        //        cmd.Parameters.Add(new SqlParameter("@userCode", userId));
+        //        // execute the command
+        //        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+
+        //        while (dr.Read())
+        //        {
+        //            User user = new User();
+        //            user.UserId = Convert.ToInt32(dr["UserCode"]);
+        //            user.FirstName = (string)dr["FirstName"];
+        //            user.LastName = (string)dr["LastName"];
+        //            user.Gender = Convert.ToInt32(dr["Gender"]);
+        //            user.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
+        //            if (dr["AboutMe"].GetType() != typeof(DBNull))
+        //            {
+        //                user.AboutMe = (string)dr["AboutMe"];
+        //            }
+        //            user.Lan = Convert.ToDouble(dr["Long"]);
+        //            user.Lat = Convert.ToDouble(dr["Lat"]);
+        //            if (dr["Token"].GetType() != typeof(DBNull))
+        //            {
+        //                user.Token = (string)dr["Token"];
+        //            }
+        //            user.MatchRate = Math.Round(Convert.ToDouble(dr["FinalScore"]) * 100, 1);
+
+
+        //            listOfUsers.Add(user);
+        //        }
+
+        //        return listOfUsers;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        // write to log
+        //        throw (ex);
+        //    }
+        //    finally
+        //    {
+        //        if (con != null)
+        //        {
+        //            con.Close();
+        //        }
+
+        //    }
+        //}
+
+        public int postEInterests(Event e)
         {
             SqlConnection con;
             SqlCommand cmd;
@@ -712,7 +778,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "select ServiceId, ServiceName, ImagePrimary, ServiceDescription, ServiceAddress, s.Lat, s.Lan, OwnerId, OpenDays,OpenHoursStart, OpenHoursEnds, Categories, Neighboorhood, TotalRate, TotalVotes, u.Token from ServicesTable s left join Users u on OwnerId=UserCode where Neighboorhood='" + neiName + "'";
+                String selectSTR = "select ServiceId, ServiceName, ImagePrimary, ServiceDescription, ServiceAddress, s.Lat, s.Lan, OwnerId, OpenDays,OpenHoursStart, OpenHoursEnds, Categories, Neighboorhood, TotalRate, TotalVotes, u.FirstName, u.LastName from ServicesTable s left join Users u on OwnerId=UserCode where Neighboorhood='" + neiName + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -729,7 +795,7 @@ namespace WebApplication1.Models.DAL
                     }
                     if (Convert.ToInt32(dr["TotalVotes"]) != 0)
                     {
-                         s.Rate = Convert.ToInt32(dr["TotalRate"]) / Convert.ToInt32(dr["TotalVotes"]);
+                        s.Rate = Convert.ToInt32(dr["TotalRate"]) / Convert.ToInt32(dr["TotalVotes"]);
                     }
                     s.Description = (string)dr["ServiceDescription"];
                     if (dr["ServiceAddress"].GetType() != typeof(DBNull))
@@ -759,10 +825,11 @@ namespace WebApplication1.Models.DAL
                     }
                     s.Categories = Convert.ToInt32(dr["Categories"]);
                     s.NeighborhoodId = (string)dr["Neighboorhood"];
-                    if (dr["Token"].GetType() != typeof(DBNull))
-                    {
-                        s.OwnerToken = Convert.ToString(dr["Token"]);
-                    }
+                    User u = new User();
+                    u.FirstName = (string)dr["FirstName"];
+                    u.LastName = (string)dr["LastName"];
+                    u.UserId = Convert.ToInt32(dr["OwnerId"]);
+                    s.OwnerName = u;
                     sList.Add(s);
                 }
 
@@ -1016,7 +1083,7 @@ namespace WebApplication1.Models.DAL
             }
         }
 
-        
+
 
         //*********
         //****************Losts***************************************
@@ -1351,7 +1418,6 @@ namespace WebApplication1.Models.DAL
         public User getUserByDetails(User u)
         {
             if (u.Token != null) { updateToken(u); };
-            //updateToken(u);
             User User = getUserByDetailsUser(u);
             Intrests[] iArray = getUserByDetailsInterest(User);
             Kids[] kArray = getUserByDetailsKids(User);
@@ -1445,7 +1511,15 @@ namespace WebApplication1.Models.DAL
             try
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
-                String selectSTR = "  select *  from Users left join JobTitle on Users.JobTitleCode=JobTitle.Code where Email='" + u.Email + "' AND PasswordUser='" + u.Password + "'";
+                String selectSTR = "";
+                if (u.UserId > 0)
+                {
+                    selectSTR = "  select *  from Users left join JobTitle on Users.JobTitleCode=JobTitle.Code where UserCode=" + u.UserId;
+                }
+                else
+                {
+                    selectSTR = "  select *  from Users left join JobTitle on Users.JobTitleCode=JobTitle.Code where Email='" + u.Email + "' AND PasswordUser='" + u.Password + "'";
+                }
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -1616,7 +1690,7 @@ namespace WebApplication1.Models.DAL
             try
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
-                String selectSTR = "SELECT Token FROM Users where UserCode=" + userId ;
+                String selectSTR = "SELECT Token FROM Users where UserCode=" + userId;
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -2034,7 +2108,7 @@ namespace WebApplication1.Models.DAL
             {
                 con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-                String selectSTR = "SELECT * FROM Users LEFT JOIN ON UsersAndIntrests.UserCode = Users.UserCode Where NeighborhoodName='"+neiName+"'";
+                String selectSTR = "SELECT * FROM Users LEFT JOIN ON UsersAndIntrests.UserCode = Users.UserCode Where NeighborhoodName='" + neiName + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader

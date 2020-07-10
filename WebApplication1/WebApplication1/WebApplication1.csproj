@@ -222,6 +222,7 @@
     <Compile Include="Models\MatchingCalculate.cs" />
     <Compile Include="Models\Neighborhood.cs" />
     <Compile Include="Models\Param.cs" />
+    <Compile Include="Models\PushNotData.cs" />
     <Compile Include="Models\Service.cs" />
     <Compile Include="Models\SubCategory.cs" />
     <Compile Include="Models\User.cs" />
@@ -307,7 +308,10 @@
     <None Include="Properties\PublishProfiles\FolderProfile46.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile47.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile48.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile49.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile5.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile50.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile51.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile6.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile7.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile8.pubxml" />
@@ -335,7 +339,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="uploadedFiles\" />
+    <Folder Include="uploadFiles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />

@@ -63,43 +63,10 @@ namespace WebApplication1.Controllers
 
             return "success:) --- " + responseFromServer + ", " + returnStatus;
         }
-
-        // GET: api/Push
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET: api/Push/5
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        //// POST: api/Push
-        //public void Post([FromBody]string value)
-        //{
-        //}
-
-        // PUT: api/Push/5
-        public void Put(int id, [FromBody]string value)
-        {
-        }
-
-        // DELETE: api/Push/5
-        public void Delete(int id)
-        {
-        }
+        
     }
 
-    public class PushNotData
-    {
-        public string to { get; set; }
-        public string title { get; set; }
-        public string body { get; set; }
-        public int badge { get; set; }
-        public Data data { get; set; }
-    }
+    
 
     
 }

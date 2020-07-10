@@ -21,6 +21,7 @@ namespace WebApplication1.Models
         string openHoursStart;
         string openHoursEnds;
         Event[] events;
+        User ownerName;
         int categories;
         string neighborhoodId;
         string ownerToken;
@@ -45,6 +46,7 @@ namespace WebApplication1.Models
         public double Lan { get => lan; set => lan = value; }
         public string NeighborhoodId { get => neighborhoodId; set => neighborhoodId = value; }
         public string OwnerToken { get => ownerToken; set => ownerToken = value; }
+        public User OwnerName { get => ownerName; set => ownerName = value; }
 
         public List<Service> GetAllNeiServices(string neiName)
         {

@@ -44,6 +44,7 @@ namespace WebApplication1.Controllers
             return log.getUserByDetails(value);
         }
 
+        // PUT api/User
         [HttpPut]
         [Route("api/User/Extra")]
         public int Put([FromBody]User value)
@@ -68,9 +69,5 @@ namespace WebApplication1.Controllers
             return user.updateUser(value);
         }
 
-        // DELETE api/<controller>/5
-        public void Delete(int id)
-        {
-        }
     }
 }
