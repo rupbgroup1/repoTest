@@ -11,5 +11,10 @@ namespace WebApplication1.Models
         public int SendFrom { get; set; }
         public int SendTo { get; set; }
 
+
+        public Data()
+        {
+
+        }
     }
 }

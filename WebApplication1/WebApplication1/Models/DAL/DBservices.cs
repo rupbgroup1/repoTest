@@ -6,6 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Configuration;
+using System.IO;
+using System.Net;
+using System.Net.Http;
+using System.Web.Http;
+using System.Web.Script.Serialization;
+using WebApplication1.Models;
 
 namespace WebApplication1.Models.DAL
 {
@@ -555,72 +561,141 @@ namespace WebApplication1.Models.DAL
             }
         }
 
+        //post event interests and than send push notification to users
         public void postEventInterests(Event e)
         {
-            postEInterests(e);
-           //List<User> IntrestedUsers = getUsersToIntrestedInEvent(e);
-            
+            int ei = postEInterests(e);
+            List<User> IntrestedUsers = getUsersToIntrestedInEvent(e);
+            foreach (var user in IntrestedUsers)
+            {
+                if (user.Token != "")
+                {
+                    PushNotData pnd = new PushNotData();
+                    pnd.to = user.Token;
+                    pnd.title = e.Name;
+                    pnd.body = "אירוע חדש נוסף לרשימת המומלצים שלך";
+                    pnd.badge = 3;
+                    Data d = new Data();
+                    d.ScreenName = "RecommendedEvents";
+                    d.SendFrom = e.OpenedBy;
+                    d.SendTo = user.UserId;
+                    pnd.data = d;
 
+                    sendPush(pnd);
+                }
+            }
+
+            //PushNotData pnd = new PushNotData();
+            //pnd.to = "ExponentPushToken[cQYyeHDo4l_zVTPLg5aq-w]";
+            //pnd.title = "אירוע חדש נוסף לרשימת המומלצים שלך";
+            //pnd.body = "";
+            //pnd.badge = 3;
+            //Data d = new Data();
+            //d.ScreenName = "RecommendedEvents";
+            //d.SendFrom = 1;
+            //d.SendTo = 33;
+            //pnd.data = d;
+
+            
         }
 
-        //public List<User> getUsersToIntrestedInEvent(Event e)
-        //{
-        //    List<User> listOfUsers = new List<User>();
-        //    SqlConnection con = null;
+        public string sendPush(PushNotData pnd)
+        {
+            // Create a request using a URL that can receive a post.   
+            WebRequest request = WebRequest.Create("https://exp.host/--/api/v2/push/send");
+            // Set the Method property of the request to POST.  
+            request.Method = "POST";
+            // Create POST data and convert it to a byte array.  
+            var objectToSend = new
+            {
+                to = pnd.to,
+                title = pnd.title,
+                body = pnd.body,
+                badge = pnd.badge,
+                data = pnd.data  
+            };
 
-        //    try
-        //    {
-        //        con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
-        //        SqlCommand cmd = new SqlCommand("SP_calculateMatch", con);
+            string postData = new JavaScriptSerializer().Serialize(objectToSend);
 
-        //        // 2. set the command object so it knows to execute a stored procedure
-        //        cmd.CommandType = CommandType.StoredProcedure;
+            byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+            // Set the ContentType property of the WebRequest.  
+            request.ContentType = "application/json";
+            // Set the ContentLength property of the WebRequest.  
+            request.ContentLength = byteArray.Length;
+            // Get the request stream.  
+            Stream dataStream = request.GetRequestStream();
+            // Write the data to the request stream.  
+            dataStream.Write(byteArray, 0, byteArray.Length);
+            // Close the Stream object.  
+            dataStream.Close();
+            // Get the response.  
+            WebResponse response = request.GetResponse();
+            // Display the status.  
+            string returnStatus = ((HttpWebResponse)response).StatusDescription;
+            //Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+            // Get the stream containing content returned by the server.  
+            dataStream = response.GetResponseStream();
+            // Open the stream using a StreamReader for easy access.  
+            StreamReader reader = new StreamReader(dataStream);
+            // Read the content.  
+            string responseFromServer = reader.ReadToEnd();
+            // Display the content.  
+            //Console.WriteLine(responseFromServer);
+            // Clean up the streams.  
+            reader.Close();
+            dataStream.Close();
+            response.Close();
 
-        //        // 3. add parameter to command, which will be passed to the stored procedure
-        //        cmd.Parameters.Add(new SqlParameter("@userCode", userId));
-        //        // execute the command
-        //        SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-
-        //        while (dr.Read())
-        //        {
-        //            User user = new User();
-        //            user.UserId = Convert.ToInt32(dr["UserCode"]);
-        //            user.FirstName = (string)dr["FirstName"];
-        //            user.LastName = (string)dr["LastName"];
-        //            user.Gender = Convert.ToInt32(dr["Gender"]);
-        //            user.YearOfBirth = Convert.ToInt32(dr["YearOfBirth"]);
-        //            if (dr["AboutMe"].GetType() != typeof(DBNull))
-        //            {
-        //                user.AboutMe = (string)dr["AboutMe"];
-        //            }
-        //            user.Lan = Convert.ToDouble(dr["Long"]);
-        //            user.Lat = Convert.ToDouble(dr["Lat"]);
-        //            if (dr["Token"].GetType() != typeof(DBNull))
-        //            {
-        //                user.Token = (string)dr["Token"];
-        //            }
-        //            user.MatchRate = Math.Round(Convert.ToDouble(dr["FinalScore"]) * 100, 1);
+            return "success:) --- " + responseFromServer + ", " + returnStatus;
+        }
 
 
-        //            listOfUsers.Add(user);
-        //        }
+        //get list of users with the same interests as the event
+        public List<User> getUsersToIntrestedInEvent(Event e)
+        {
+            List<User> listOfUsers = new List<User>();
+            SqlConnection con = null;
 
-        //        return listOfUsers;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // write to log
-        //        throw (ex);
-        //    }
-        //    finally
-        //    {
-        //        if (con != null)
-        //        {
-        //            con.Close();
-        //        }
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
 
-        //    }
-        //}
+                String selectSTR = @"select distinct ui.UserCode, u.Token
+ from UsersAndIntrests ui left join Users u on ui.UserCode=u.UserCode
+ where IntrestId in 
+ (select InterestId from EventsAndInterests where EventCode=(select top 1 EventCode from EventsTable order by EventCode desc)) AND u.Token IS NOT NULL AND u.UserCode<>" + e.OpenedBy+ " and u.NeighborhoodName='"+e.NeiCode+"'";
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+
+                while (dr.Read())
+                {
+                    User user = new User();
+                    user.UserId = Convert.ToInt32(dr["UserCode"]);
+                    user.Token = (string)dr["Token"];
+                    
+                    listOfUsers.Add(user);
+                }
+
+                return listOfUsers;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
+
 
         public int postEInterests(Event e)
         {

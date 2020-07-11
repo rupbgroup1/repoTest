@@ -12,5 +12,10 @@ namespace WebApplication1.Models
         public string body { get; set; }
         public int badge { get; set; }
         public Data data { get; set; }
+
+        public PushNotData()
+        {
+
+        }
     }
 }
