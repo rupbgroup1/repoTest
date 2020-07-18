@@ -190,6 +190,7 @@
     <Compile Include="Areas\HelpPage\SampleGeneration\TextSample.cs" />
     <Compile Include="Areas\HelpPage\XmlDocumentationProvider.cs" />
     <Compile Include="Controllers\CategoryController.cs" />
+    <Compile Include="Controllers\ChatController.cs" />
     <Compile Include="Controllers\CityController.cs" />
     <Compile Include="Controllers\EventsController.cs" />
     <Compile Include="Controllers\FileUploadController.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Chat.cs" />
     <Compile Include="Models\City.cs" />
     <Compile Include="Models\Address.cs" />
     <Compile Include="Models\Category.cs" />
@@ -314,6 +316,8 @@
     <None Include="Properties\PublishProfiles\FolderProfile51.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile52.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile53.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile54.pubxml" />
+    <None Include="Properties\PublishProfiles\FolderProfile55.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile6.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile7.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile8.pubxml" />

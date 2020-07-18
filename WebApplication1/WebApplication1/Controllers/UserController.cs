@@ -27,6 +27,14 @@ namespace WebApplication1.Controllers
             return user.GetToken(userId);
         }
 
+        [HttpGet]
+        [Route("api/User/Chats")]
+        public List<User> GetChats(int userId)
+        {
+            User user = new User();
+            return user.GetChats(userId);
+        }
+
         // POST api/User
         [HttpPost]
         [Route("api/User")]

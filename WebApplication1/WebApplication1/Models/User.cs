@@ -32,7 +32,7 @@ namespace WebApplication1.Models
         string neighborhoodName;
         double matchRate;
         string token;
-        
+
 
         public User()
         {
@@ -56,7 +56,7 @@ namespace WebApplication1.Models
             DBservices dbs = new DBservices();
             return dbs.GetToken(userId);
         }
-        
+
         public int GetUserByEmail(string userEmail)
         {
             DBservices dbs = new DBservices();
@@ -72,7 +72,7 @@ namespace WebApplication1.Models
         public List<User> GetAllUsersByfullName(string cityName, string firstName, string lastName)
         {
             DBservices dbs = new DBservices();
-            
+
             return dbs.GetAllUsersByfullName(cityName, firstName, lastName);
         }
 
@@ -83,6 +83,12 @@ namespace WebApplication1.Models
             return dbs.GetAllUsersByIntrest(neiId, intrest);
         }
 
+        public List<User> GetChats(int userId)
+        {
+            DBservices dbs = new DBservices();
+
+            return dbs.GetChats(userId);
+        }
         public int updateUserExtraDetails(User u)
         {
             DBservices dbs = new DBservices();

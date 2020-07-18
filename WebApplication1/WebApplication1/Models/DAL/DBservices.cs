@@ -596,7 +596,7 @@ namespace WebApplication1.Models.DAL
             //d.SendTo = 33;
             //pnd.data = d;
 
-            
+
         }
 
         public string sendPush(PushNotData pnd)
@@ -612,7 +612,7 @@ namespace WebApplication1.Models.DAL
                 title = pnd.title,
                 body = pnd.body,
                 badge = pnd.badge,
-                data = pnd.data  
+                data = pnd.data
             };
 
             string postData = new JavaScriptSerializer().Serialize(objectToSend);
@@ -663,7 +663,7 @@ namespace WebApplication1.Models.DAL
                 String selectSTR = @"select distinct ui.UserCode, u.Token
  from UsersAndIntrests ui left join Users u on ui.UserCode=u.UserCode
  where IntrestId in 
- (select InterestId from EventsAndInterests where EventCode=(select top 1 EventCode from EventsTable order by EventCode desc)) AND u.Token IS NOT NULL AND u.UserCode<>" + e.OpenedBy+ " and u.NeighborhoodName='"+e.NeiCode+"'";
+ (select InterestId from EventsAndInterests where EventCode=(select top 1 EventCode from EventsTable order by EventCode desc)) AND u.Token IS NOT NULL AND u.UserCode<>" + e.OpenedBy + " and u.NeighborhoodName='" + e.NeiCode + "'";
                 SqlCommand cmd = new SqlCommand(selectSTR, con);
 
                 // get a reader
@@ -675,7 +675,7 @@ namespace WebApplication1.Models.DAL
                     User user = new User();
                     user.UserId = Convert.ToInt32(dr["UserCode"]);
                     user.Token = (string)dr["Token"];
-                    
+
                     listOfUsers.Add(user);
                 }
 
@@ -1819,8 +1819,15 @@ namespace WebApplication1.Models.DAL
                 throw (ex);
             }
 
-            // String cStr = BuildInsertCommand(user);      // helper method to build the insert string
-            String cStr = "Update Users set FirstName='" + user.FirstName + "', LastName='" + user.LastName + "',Gender='" + user.Gender + "', YearOfBirth='" + user.YearOfBirth + "', FamilyStatus ='" + user.FamilyStatus + "', ImageId='" + user.ImagePath + "', JobTitleCode=" + user.JobTitleId + ", WorkPlace='" + user.WorkPlace + "', NumberOfChildren=" + user.NumOfChildren + ",AboutMe='" + user.AboutMe + "' where UserCode=" + user.UserId;
+            String cStr = "";
+            if (user.JobTitleId == 0)
+            {
+                cStr = "Update Users set FamilyStatus ='" + user.FamilyStatus + "', WorkPlace='" + user.WorkPlace + "', NumberOfChildren=" + user.NumOfChildren + ",AboutMe='" + user.AboutMe + "' where UserCode=" + user.UserId;
+            }
+            else
+            {
+                cStr = "Update Users set FamilyStatus ='" + user.FamilyStatus + "', JobTitleCode=" + user.JobTitleId + ", WorkPlace='" + user.WorkPlace + "', NumberOfChildren=" + user.NumOfChildren + ",AboutMe='" + user.AboutMe + "' where UserCode=" + user.UserId;
+            }
             cmd = CreateCommand(cStr, con);             // create the command
 
             try
@@ -1843,7 +1850,7 @@ namespace WebApplication1.Models.DAL
                 }
             }
         }
-
+        //Kids
         public int deletefromKidsTable(User user)
         {
             SqlConnection con;
@@ -2018,8 +2025,14 @@ namespace WebApplication1.Models.DAL
             }
         }
 
+        //update user + extra details
         public int updateUser(User user)
         {
+            deletefromKidsTable(user);
+            insertIntoKidsTable(user);
+            deletefromInterestsTable(user);
+            insertIntoInterestsTable(user);
+
             SqlConnection con;
             SqlCommand cmd;
 
@@ -2034,7 +2047,7 @@ namespace WebApplication1.Models.DAL
             }
 
             // String cStr = BuildInsertCommand(user);      // helper method to build the insert string
-            String cStr = "Update Users set FirstName='" + user.FirstName + "', LastName='" + user.LastName + "', Gender='" + user.Gender + "', YearOfBirth='" + user.YearOfBirth + "', FamilyStatus ='" + user.FamilyStatus + "', JobTitleCode=" + user.JobTitleId + ", WorkPlace='" + user.WorkPlace + "', NumberOfChildren=" + user.NumOfChildren + ",AboutMe='" + user.AboutMe + "' where UserCode=" + user.UserId;
+            String cStr = "Update Users set FirstName='" + user.FirstName + "', LastName='" + user.LastName + "', Gender='" + user.Gender + "', YearOfBirth='" + user.YearOfBirth + "', FamilyStatus ='" + user.FamilyStatus + "', JobTitleCode=" + user.JobTitleId + ", WorkPlace='" + user.WorkPlace + "', NumberOfChildren=" + user.NumOfChildren + ",AboutMe='" + user.AboutMe + "', ImageId='"+user.ImagePath +"' where UserCode=" + user.UserId;
             cmd = CreateCommand(cStr, con);             // create the command
 
             try
@@ -2057,6 +2070,7 @@ namespace WebApplication1.Models.DAL
                 }
             }
         }
+
         //*****************Neighboors***************************
 
         //filter neighboors by search *full* name
@@ -2689,5 +2703,97 @@ namespace WebApplication1.Models.DAL
                 }
             }
         }
+
+
+        //********************Chat***********************
+
+        public int postNewChat(Chat c)
+        {
+            SqlConnection con;
+            SqlCommand cmd;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create the connection
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+
+            String cStr = "INSERT INTO Chat (FromUser, ToUser) VALUES (" + c.FromUser + "," + c.ToUser + ")";    // helper method to build the insert string
+
+            cmd = CreateCommand(cStr, con);             // create the command
+
+            try
+            {
+                int numEffected = cmd.ExecuteNonQuery(); // execute the command
+                return numEffected;
+            }
+            catch (Exception ex)
+            {
+                return 0;
+                // write to log
+                throw (ex);
+            }
+
+            finally
+            {
+                if (con != null)
+                {
+                    // close the db connection
+                    con.Close();
+                }
+            }
+        }
+
+
+        public List<User> GetChats(int userId)
+        {
+            List<User> allChats = new List<User>();
+            SqlConnection con = null;
+
+            try
+            {
+                con = connect("DBConnectionString"); // create a connection to the database using the connection String defined in the web config file
+
+                String selectSTR = @"select distinct ToUser as userId, u.FirstName, u.LastName, u.ImageId from Chat c left join Users u on c.ToUser=u.UserCode  where FromUser=" + userId +
+@" union
+select distinct FromUser as userId, u.FirstName, u.LastName, u.ImageId from Chat c left join Users u on c.FromUser = u.UserCode   where ToUser = " + userId;
+
+                SqlCommand cmd = new SqlCommand(selectSTR, con);
+
+                // get a reader
+                SqlDataReader dr = cmd.ExecuteReader(CommandBehavior.CloseConnection); // CommandBehavior.CloseConnection: the connection will be closed after reading has reached the end
+
+                while (dr.Read())
+                {   // Read till the end of the data into a row
+                    User u = new User();
+                    u.UserId = Convert.ToInt32(dr["userId"]);
+                    u.FirstName = (string)dr["FirstName"];
+                    u.LastName = (string)dr["LastName"];
+                    u.ImagePath = (string)dr["ImageId"];
+
+                    allChats.Add(u);
+                }
+
+                return allChats;
+            }
+            catch (Exception ex)
+            {
+                // write to log
+                throw (ex);
+            }
+            finally
+            {
+                if (con != null)
+                {
+                    con.Close();
+                }
+
+            }
+        }
     }
+
 }

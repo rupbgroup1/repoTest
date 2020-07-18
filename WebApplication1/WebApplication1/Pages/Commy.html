@@ -25,7 +25,7 @@
             //startTimer();
             //putPass();
             //getEvents();
-            postEvent();
+            //postEvent();
             //getMyEvents();
             //getAtt();
             //getCat();
@@ -40,6 +40,8 @@
             //updateRate();
             //GetToken();
             //getRecommendedEvents()
+            //updateUser();
+            GetChats()
 
         });
 
@@ -65,28 +67,87 @@
                 "WhoFound": 1,
             }
         }
+
+        function updateUser() {
+            let user = {
+                "AboutMe": "אוהבת לתכנת ריאקט כייףכיייף",
+                "FamilyStatus": "נשוא/ה",
+                "Intrests": [
+                    {
+                        "Icon": null,
+                        "Id": 1,
+                        "MainInterest": "עיצוב",
+                        "Subintrest": "עיצוב פנים",
+                    },
+                    {
+                        "Icon": null,
+                        "Id": 3,
+                        "MainInterest": "עיצוב",
+                        "Subintrest": "עיצוב אופנה",
+                    },
+                    {
+                        "Icon": null,
+                        "Id": 4,
+                        "MainInterest": "ספורט",
+                        "Subintrest": "התעמלות קרקע",
+                    },
+                    {
+                        "Icon": null,
+                        "Id": 84,
+                        "MainInterest": "צילום",
+                        "Subintrest": "צילום - כללי",
+                    },
+                    {
+                        "Icon": null,
+                        "Id": 90,
+                        "MainInterest": "עיצוב",
+                        "Subintrest": "עיצוב - כללי",
+                    },
+                    {
+                        "Id": 27,
+                    },
+                ],
+                "JobTitleId": 0,
+                "Kids": [
+                    {
+                        "Id": 1,
+                        "YearOfBirth": 2015,
+                    },
+                    {
+                        "Id": 1,
+                        "YearOfBirth": 2013,
+                    },
+                ],
+                "NumOfChildren": "2",
+                "UserId": 1,
+                "WorkPlace": "ניר ח\"ן",
+            }
+
+            ajaxCall("PUT", "../api/User/Extra", JSON.stringify(user), succ2, err2);
+        }
+                           
         function postNewLost() {
             let lost = {
                 Title: "נמצאו אופנייים ורודות",
                 Description: "נמצאו ברחוב הציפורים ליד גן השחף ביום שישי בשעה אחת",
-                Location:"גן השחף",
+                Location: "גן השחף",
                 FoundDate: "2020-05-21",
                 Status: "False",
                 WhoFound: 1,
-                NeighboorhoodName:"תל מונד"
+                NeighboorhoodName: "תל מונד"
             }
             ajaxCall("POST", "../api/Losts/New", JSON.stringify(lost), succ2, err2);
         }
         function insertService() {
             let service = {
-                    "Categories": 2,
-                    "Description": "טסט",
-                    "NeighborhoodId": "תל מונד",
-                    "OpenDays": "א-ה",
-                    "OpenHoursEnds": "11:30",
-                    "OpenHoursStart": "12:30",
-                    "Owner": 26,
-                    "ServiceName": "טסט"
+                "Categories": 2,
+                "Description": "טסט",
+                "NeighborhoodId": "תל מונד",
+                "OpenDays": "א-ה",
+                "OpenHoursEnds": "11:30",
+                "OpenHoursStart": "12:30",
+                "Owner": 26,
+                "ServiceName": "טסט"
             }
             ajaxCall("POST", "../api/Services/New", JSON.stringify(service), succ2, err2);
         }
@@ -149,12 +210,12 @@
             }
             ajaxCall("DELETE", "../api/Events/DeleteAtt", JSON.stringify(att), succ2, err2);
         }
-        
+
         function getMyService() {
 
             ajaxCall("GET", "../api/Services/All?neiName=תל מונד", "", succ3, err3);
         }
-        
+
         function getMyLosts() {
 
             ajaxCall("GET", "../api/Losts/My?userId=1", "", succ3, err3);
@@ -194,14 +255,14 @@
         //function getUser() {
         //    searchKeys = {
         //        Email: "test@gmail.com",
-        //        Password: "111111", 
+        //        Password: "111111",
         //        Token:'ExponentPushToken[cQYyeHDo4l_zVTPLg5aq-w]'
         //    }
         //    ajaxCall("POST", "../api/User/login", JSON.stringify(searchKeys), succ2, err2);
         //}
         function getUser() {
             searchKeys = {
-                UserId:33
+                UserId: 33
             }
             ajaxCall("POST", "../api/User/login", JSON.stringify(searchKeys), succ2, err2);
         }
@@ -278,6 +339,11 @@
 
             }
             ajaxCall("POST", "../api/User", JSON.stringify(newUser), successPost, errorPost);
+        }
+
+        
+        function GetChats() {
+            ajaxCall("GET", "../api/User/Chats?userId=1", "", succ2, err2);
         }
         function successPost(data) {
             console.log(data);
